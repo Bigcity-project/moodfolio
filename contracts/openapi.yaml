@@ -1,0 +1,386 @@
+openapi: 3.0.3
+info:
+  title: Moodfolio API
+  description: Investment Decision Support System API
+  version: 1.0.0
+  contact:
+    name: Moodfolio Team
+
+servers:
+  - url: http://localhost:5000
+    description: Development server
+
+paths:
+  /api/v1/market/weather:
+    get:
+      operationId: getMarketWeather
+      summary: Get current market weather
+      description: Returns the current market mood score and weather classification
+      tags:
+        - Market Weather
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketWeatherResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/simulation/do_nothing:
+    post:
+      operationId: runDoNothingSimulation
+      summary: Run do-nothing simulation
+      description: Compares actual portfolio performance against a do-nothing strategy
+      tags:
+        - Simulation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DoNothingSimulationRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoNothingSimulationResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/analysis/persona:
+    post:
+      operationId: analyzePersona
+      summary: Analyze portfolio persona
+      description: Classifies the investor persona based on transaction patterns
+      tags:
+        - Analysis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonaAnalysisRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonaAnalysisResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    TransactionDto:
+      type: object
+      required:
+        - date
+        - symbol
+        - action
+        - quantity
+        - price
+      properties:
+        date:
+          type: string
+          format: date
+          example: '2024-01-15'
+        symbol:
+          type: string
+          minLength: 1
+          maxLength: 10
+          example: 'AAPL'
+        action:
+          type: string
+          enum: [BUY, SELL]
+          example: 'BUY'
+        quantity:
+          type: number
+          format: decimal
+          minimum: 0.0001
+          example: 10.5
+        price:
+          type: number
+          format: decimal
+          minimum: 0.0001
+          example: 150.50
+
+    MarketWeatherResponse:
+      type: object
+      required:
+        - moodScore
+        - weatherType
+        - trend
+        - mainFactors
+        - timestamp
+      properties:
+        moodScore:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Market mood score from 0 (extreme fear) to 100 (extreme greed)
+          example: 65
+        weatherType:
+          type: string
+          enum: [SUNNY, CLOUDY, RAINY, STORMY]
+          description: Weather classification based on mood score
+          example: 'SUNNY'
+        trend:
+          type: string
+          enum: [UP, DOWN, NEUTRAL]
+          description: Trend compared to previous day
+          example: 'UP'
+        mainFactors:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarketFactor'
+          description: Main contributing factors to the mood score
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the data
+          example: '2024-01-15T10:30:00Z'
+
+    MarketFactor:
+      type: object
+      required:
+        - name
+        - value
+        - impact
+      properties:
+        name:
+          type: string
+          example: 'VIX'
+        value:
+          type: number
+          format: decimal
+          example: 15.5
+        impact:
+          type: string
+          enum: [POSITIVE, NEGATIVE, NEUTRAL]
+          example: 'POSITIVE'
+
+    DoNothingSimulationRequest:
+      type: object
+      required:
+        - transactions
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionDto'
+          minItems: 1
+          maxItems: 10000
+
+    DoNothingSimulationResponse:
+      type: object
+      required:
+        - actualReturnPct
+        - doNothingReturnPct
+        - performanceDrag
+        - verdict
+        - chartData
+      properties:
+        actualReturnPct:
+          type: number
+          format: decimal
+          description: Actual portfolio return percentage
+          example: -15.5
+        doNothingReturnPct:
+          type: number
+          format: decimal
+          description: Return if you had done nothing (held initial position)
+          example: 10.2
+        performanceDrag:
+          type: number
+          format: decimal
+          description: Difference between actual and do-nothing returns
+          example: -25.7
+        verdict:
+          type: string
+          description: Human-readable verdict
+          example: 'Your active trading cost you 25.7% in returns'
+        chartData:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChartDataPoint'
+
+    ChartDataPoint:
+      type: object
+      required:
+        - date
+        - actualValue
+        - doNothingValue
+      properties:
+        date:
+          type: string
+          format: date
+          example: '2024-01-15'
+        actualValue:
+          type: number
+          format: decimal
+          example: 10000.50
+        doNothingValue:
+          type: number
+          format: decimal
+          example: 11000.25
+
+    PersonaAnalysisRequest:
+      type: object
+      required:
+        - transactions
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionDto'
+          minItems: 1
+          maxItems: 10000
+
+    PersonaAnalysisResponse:
+      type: object
+      required:
+        - personaId
+        - displayName
+        - traits
+        - description
+        - advice
+        - stats
+      properties:
+        personaId:
+          type: string
+          enum: [HODLER, DAY_TRADER, PANIC_SELLER, SNIPER]
+          description: Persona identifier
+          example: 'DAY_TRADER'
+        displayName:
+          type: string
+          description: Human-readable persona name
+          example: 'The Day Trader'
+        traits:
+          type: array
+          items:
+            type: string
+          description: Key behavioral traits
+          example: ['High frequency trading', 'Short holding periods']
+        description:
+          type: string
+          description: Detailed description of the persona
+          example: 'You trade frequently with short holding periods...'
+        advice:
+          type: string
+          description: Personalized advice
+          example: 'Consider longer holding periods to reduce transaction costs...'
+        stats:
+          $ref: '#/components/schemas/PersonaStats'
+
+    PersonaStats:
+      type: object
+      required:
+        - avgHoldingDays
+        - turnoverRate
+        - panicSellRatio
+        - winRate
+      properties:
+        avgHoldingDays:
+          type: number
+          format: decimal
+          description: Average holding period in days
+          example: 2.5
+        turnoverRate:
+          type: number
+          format: decimal
+          description: Portfolio turnover rate percentage
+          example: 550.5
+        panicSellRatio:
+          type: number
+          format: decimal
+          description: Percentage of sells during high VIX
+          example: 35.0
+        winRate:
+          type: number
+          format: decimal
+          description: Percentage of profitable trades
+          example: 48.5
+
+    ErrorResponse:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: 'An unexpected error occurred'
+        code:
+          type: string
+          example: 'INTERNAL_ERROR'
+        traceId:
+          type: string
+          example: '00-abc123...'
+
+    ValidationErrorResponse:
+      type: object
+      required:
+        - message
+        - code
+        - errors
+      properties:
+        message:
+          type: string
+          example: 'Validation failed'
+        code:
+          type: string
+          example: 'VALIDATION_ERROR'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+
+    ValidationError:
+      type: object
+      required:
+        - field
+        - message
+      properties:
+        field:
+          type: string
+          example: 'transactions[0].price'
+        message:
+          type: string
+          example: 'Price must be greater than 0'
+
+tags:
+  - name: Market Weather
+    description: Market mood and weather analysis
+  - name: Simulation
+    description: Portfolio simulation endpoints
+  - name: Analysis
+    description: Portfolio analysis endpoints

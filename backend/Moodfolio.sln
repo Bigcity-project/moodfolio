@@ -1,0 +1,85 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C100B873-BE2E-4764-B77B-5AFD861F2E68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moodfolio.Api", "src\Moodfolio.Api\Moodfolio.Api.csproj", "{3287964F-FBB1-437A-855C-E1E8EFAF74CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moodfolio.Domain", "src\Moodfolio.Domain\Moodfolio.Domain.csproj", "{210D5D3B-E452-42BB-A9AC-4FA38488942B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moodfolio.Application", "src\Moodfolio.Application\Moodfolio.Application.csproj", "{8C38CB44-CF35-4106-9829-7EF268D588FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moodfolio.Contracts", "src\Moodfolio.Contracts\Moodfolio.Contracts.csproj", "{BDF6E09B-A55B-42E2-8E56-C264FE70E258}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moodfolio.Infrastructure", "src\Moodfolio.Infrastructure\Moodfolio.Infrastructure.csproj", "{83E2749D-32EA-4870-A901-DAEBA86CFEAA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F4B3C694-10EF-4032-AD02-1C5C698C8AB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moodfolio.Domain.Tests", "tests\Moodfolio.Domain.Tests\Moodfolio.Domain.Tests.csproj", "{9778E2A9-36CA-4C3D-BAFE-88C97D80CB32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moodfolio.Application.Tests", "tests\Moodfolio.Application.Tests\Moodfolio.Application.Tests.csproj", "{2D40CD34-345B-4FAF-917B-555B499A0E7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moodfolio.Contracts.Tests", "tests\Moodfolio.Contracts.Tests\Moodfolio.Contracts.Tests.csproj", "{268E718E-236A-45E4-93DB-FC3F5F0DEE83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moodfolio.IntegrationTests", "tests\Moodfolio.IntegrationTests\Moodfolio.IntegrationTests.csproj", "{11DF4E65-EE29-47D4-98FB-B996B7881F6B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3287964F-FBB1-437A-855C-E1E8EFAF74CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3287964F-FBB1-437A-855C-E1E8EFAF74CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3287964F-FBB1-437A-855C-E1E8EFAF74CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3287964F-FBB1-437A-855C-E1E8EFAF74CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{210D5D3B-E452-42BB-A9AC-4FA38488942B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{210D5D3B-E452-42BB-A9AC-4FA38488942B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{210D5D3B-E452-42BB-A9AC-4FA38488942B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{210D5D3B-E452-42BB-A9AC-4FA38488942B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C38CB44-CF35-4106-9829-7EF268D588FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C38CB44-CF35-4106-9829-7EF268D588FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C38CB44-CF35-4106-9829-7EF268D588FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C38CB44-CF35-4106-9829-7EF268D588FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDF6E09B-A55B-42E2-8E56-C264FE70E258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDF6E09B-A55B-42E2-8E56-C264FE70E258}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDF6E09B-A55B-42E2-8E56-C264FE70E258}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDF6E09B-A55B-42E2-8E56-C264FE70E258}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83E2749D-32EA-4870-A901-DAEBA86CFEAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83E2749D-32EA-4870-A901-DAEBA86CFEAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83E2749D-32EA-4870-A901-DAEBA86CFEAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83E2749D-32EA-4870-A901-DAEBA86CFEAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9778E2A9-36CA-4C3D-BAFE-88C97D80CB32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9778E2A9-36CA-4C3D-BAFE-88C97D80CB32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9778E2A9-36CA-4C3D-BAFE-88C97D80CB32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9778E2A9-36CA-4C3D-BAFE-88C97D80CB32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D40CD34-345B-4FAF-917B-555B499A0E7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D40CD34-345B-4FAF-917B-555B499A0E7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D40CD34-345B-4FAF-917B-555B499A0E7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D40CD34-345B-4FAF-917B-555B499A0E7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{268E718E-236A-45E4-93DB-FC3F5F0DEE83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{268E718E-236A-45E4-93DB-FC3F5F0DEE83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{268E718E-236A-45E4-93DB-FC3F5F0DEE83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{268E718E-236A-45E4-93DB-FC3F5F0DEE83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11DF4E65-EE29-47D4-98FB-B996B7881F6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11DF4E65-EE29-47D4-98FB-B996B7881F6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11DF4E65-EE29-47D4-98FB-B996B7881F6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11DF4E65-EE29-47D4-98FB-B996B7881F6B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3287964F-FBB1-437A-855C-E1E8EFAF74CF} = {C100B873-BE2E-4764-B77B-5AFD861F2E68}
+		{210D5D3B-E452-42BB-A9AC-4FA38488942B} = {C100B873-BE2E-4764-B77B-5AFD861F2E68}
+		{8C38CB44-CF35-4106-9829-7EF268D588FD} = {C100B873-BE2E-4764-B77B-5AFD861F2E68}
+		{BDF6E09B-A55B-42E2-8E56-C264FE70E258} = {C100B873-BE2E-4764-B77B-5AFD861F2E68}
+		{83E2749D-32EA-4870-A901-DAEBA86CFEAA} = {C100B873-BE2E-4764-B77B-5AFD861F2E68}
+		{9778E2A9-36CA-4C3D-BAFE-88C97D80CB32} = {F4B3C694-10EF-4032-AD02-1C5C698C8AB0}
+		{2D40CD34-345B-4FAF-917B-555B499A0E7C} = {F4B3C694-10EF-4032-AD02-1C5C698C8AB0}
+		{268E718E-236A-45E4-93DB-FC3F5F0DEE83} = {F4B3C694-10EF-4032-AD02-1C5C698C8AB0}
+		{11DF4E65-EE29-47D4-98FB-B996B7881F6B} = {F4B3C694-10EF-4032-AD02-1C5C698C8AB0}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,45 @@
+# .NET
+bin/
+obj/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.db
+*.db-journal
+
+# NuGet
+packages/
+*.nupkg
+project.lock.json
+
+# Node.js
+node_modules/
+.next/
+out/
+build/
+.env*.local
+
+# IDEs
+.idea/
+.vs/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test results
+TestResults/
+coverage/
+playwright-report/
+test-results/
+
+# Build outputs
+dist/
