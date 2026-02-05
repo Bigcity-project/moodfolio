@@ -43,7 +43,7 @@ builder.Services.AddScoped<IWinRateCalculator, WinRateCalculator>();
 builder.Services.AddScoped<IPersonaClassifier, PersonaClassifier>();
 
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
-    ?? new[] { "http://localhost:8080", "http://localhost:3000" };
+    ?? ["http://localhost:8080", "http://localhost:3000"];
 
 builder.Services.AddCors(options =>
 {
@@ -65,8 +65,8 @@ using (var scope = app.Services.CreateScope())
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    _ = app.UseSwagger();
+    _ = app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Moodfolio API v1");
     });
