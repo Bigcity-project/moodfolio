@@ -3,70 +3,179 @@
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
+export type WeatherType = 'SUNNY' | 'CLOUDY' | 'RAINY' | 'STORMY'
+
 interface MoodOrbProps {
   moodScore: number
-  weatherType: 'SUNNY' | 'CLOUDY' | 'RAINY' | 'STORMY'
-  size?: 'sm' | 'md' | 'lg'
+  weatherType: WeatherType
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+  showScore?: boolean
+  showEmoji?: boolean
 }
 
-const weatherColors = {
+const weatherConfig = {
   SUNNY: {
-    primary: 'from-yellow-400 to-orange-500',
-    glow: 'shadow-yellow-400/50',
-    bg: 'bg-gradient-to-br from-yellow-100 to-orange-100',
+    gradient: 'from-yellow-400 via-orange-400 to-amber-500',
+    glow: 'shadow-[0_0_80px_30px_rgba(251,191,36,0.4)]',
+    emoji: '☀️',
+    label: 'Sunny',
   },
   CLOUDY: {
-    primary: 'from-gray-300 to-gray-500',
-    glow: 'shadow-gray-400/50',
-    bg: 'bg-gradient-to-br from-gray-100 to-gray-200',
+    gradient: 'from-slate-400 via-gray-400 to-zinc-500',
+    glow: 'shadow-[0_0_80px_30px_rgba(148,163,184,0.3)]',
+    emoji: '⛅',
+    label: 'Cloudy',
   },
   RAINY: {
-    primary: 'from-blue-400 to-blue-600',
-    glow: 'shadow-blue-400/50',
-    bg: 'bg-gradient-to-br from-blue-100 to-blue-200',
+    gradient: 'from-blue-400 via-sky-500 to-cyan-600',
+    glow: 'shadow-[0_0_80px_30px_rgba(56,189,248,0.4)]',
+    emoji: '🌧️',
+    label: 'Rainy',
   },
   STORMY: {
-    primary: 'from-purple-600 to-gray-800',
-    glow: 'shadow-purple-500/50',
-    bg: 'bg-gradient-to-br from-purple-100 to-gray-200',
+    gradient: 'from-purple-600 via-violet-700 to-slate-800',
+    glow: 'shadow-[0_0_80px_30px_rgba(139,92,246,0.4)]',
+    emoji: '⛈️',
+    label: 'Stormy',
   },
 }
 
-const sizeClasses = {
-  sm: 'w-24 h-24',
-  md: 'w-40 h-40',
-  lg: 'w-56 h-56',
+const sizeConfig = {
+  sm: {
+    container: 'w-20 h-20',
+    score: 'text-2xl',
+    emoji: 'text-3xl',
+    ring: 'w-24 h-24',
+  },
+  md: {
+    container: 'w-32 h-32',
+    score: 'text-4xl',
+    emoji: 'text-4xl',
+    ring: 'w-40 h-40',
+  },
+  lg: {
+    container: 'w-48 h-48',
+    score: 'text-6xl',
+    emoji: 'text-5xl',
+    ring: 'w-56 h-56',
+  },
+  xl: {
+    container: 'w-64 h-64',
+    score: 'text-7xl',
+    emoji: 'text-6xl',
+    ring: 'w-72 h-72',
+  },
 }
 
-export function MoodOrb({ moodScore, weatherType, size = 'md' }: MoodOrbProps) {
-  const colors = weatherColors[weatherType]
-  const pulseSpeed = Math.max(1, 4 - (moodScore / 33))
+export function MoodOrb({
+  moodScore,
+  weatherType,
+  size = 'lg',
+  showScore = true,
+  showEmoji = true,
+}: MoodOrbProps) {
+  const config = weatherConfig[weatherType]
+  const sizeClasses = sizeConfig[size]
+
+  // Pulse speed based on mood (higher mood = slower, calmer pulse)
+  const pulseSpeed = 3 + (moodScore / 50)
 
   return (
     <div className="relative flex items-center justify-center">
+      {/* Outer glow ring */}
       <motion.div
         className={cn(
-          'rounded-full bg-gradient-to-br',
-          colors.primary,
-          sizeClasses[size],
-          'shadow-2xl',
-          colors.glow
+          'absolute rounded-full opacity-30',
+          sizeClasses.ring,
+          `bg-gradient-to-br ${config.gradient}`
         )}
         animate={{
-          scale: [1, 1.05, 1],
-          opacity: [0.8, 1, 0.8],
+          scale: [1, 1.1, 1],
+          opacity: [0.2, 0.4, 0.2],
         }}
         transition={{
-          duration: pulseSpeed,
+          duration: pulseSpeed + 1,
           repeat: Infinity,
           ease: 'easeInOut',
         }}
       />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-4xl font-bold text-white drop-shadow-lg">
-          {moodScore}
-        </span>
-      </div>
+
+      {/* Main orb with float animation */}
+      <motion.div
+        className={cn(
+          'relative rounded-full bg-gradient-to-br',
+          config.gradient,
+          config.glow,
+          sizeClasses.container
+        )}
+        animate={{
+          y: [0, -12, 0],
+          rotate: [0, 2, 0, -2, 0],
+          scale: [1, 1.02, 1],
+        }}
+        transition={{
+          y: {
+            duration: 4,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          },
+          rotate: {
+            duration: 6,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          },
+          scale: {
+            duration: pulseSpeed,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          },
+        }}
+      >
+        {/* Inner shine effect */}
+        <div className="absolute inset-2 rounded-full bg-gradient-to-br from-white/30 to-transparent" />
+
+        {/* Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          {showEmoji && (
+            <motion.span
+              className={cn('mb-1', sizeClasses.emoji)}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', delay: 0.2 }}
+            >
+              {config.emoji}
+            </motion.span>
+          )}
+          {showScore && (
+            <motion.span
+              className={cn(
+                'font-bold text-white drop-shadow-lg',
+                sizeClasses.score
+              )}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              {moodScore}
+            </motion.span>
+          )}
+        </div>
+      </motion.div>
     </div>
   )
+}
+
+// Helper function to get interpretation based on score
+export function getMoodInterpretation(score: number, weatherType: WeatherType): string {
+  const config = weatherConfig[weatherType]
+
+  if (score >= 70) {
+    return `${config.emoji} Market sentiment is ${config.label.toLowerCase()}. Investors are feeling optimistic.`
+  } else if (score >= 50) {
+    return `${config.emoji} Market sentiment is ${config.label.toLowerCase()}. Proceed with balanced caution.`
+  } else if (score >= 30) {
+    return `${config.emoji} Market sentiment is ${config.label.toLowerCase()}. Consider defensive positions.`
+  } else {
+    return `${config.emoji} Market sentiment is ${config.label.toLowerCase()}. High uncertainty - stay alert.`
+  }
 }
