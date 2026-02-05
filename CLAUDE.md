@@ -6,7 +6,32 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Moodfolio is an Investment Decision Support System that helps users understand their trading psychology with AI-powered market analysis. Full-stack application with .NET 8 backend and Next.js 14 frontend.
 
+## Quick Start
+
+```bash
+# 安裝依賴
+make install
+
+# 同時啟動前後端開發伺服器
+make dev
+
+# 或分別啟動
+make backend  # http://localhost:5000
+make frontend # http://localhost:8080
+```
+
 ## Common Commands
+
+### Using Makefile (Recommended)
+```bash
+make install   # Install all dependencies
+make dev       # Start both frontend and backend
+make backend   # Start backend only (port 5000)
+make frontend  # Start frontend only (port 8080)
+make build     # Build both projects
+make test      # Run all tests
+make clean     # Clean build artifacts
+```
 
 ### Backend (.NET)
 ```bash
@@ -33,8 +58,8 @@ cd frontend
 # Install dependencies
 pnpm install
 
-# Development server (port 3000)
-pnpm dev
+# Development server (port 8080)
+pnpm dev --port 8080
 
 # Build and lint
 pnpm build
