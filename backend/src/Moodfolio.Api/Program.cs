@@ -1,12 +1,11 @@
 using FluentValidation;
-using FluentValidation.AspNetCore;
-using Microsoft.EntityFrameworkCore;
 using Moodfolio.Application.DoNothingSimulation.Services;
 using Moodfolio.Application.MarketWeather.Services;
 using Moodfolio.Application.PortfolioPersona.Services;
 using Moodfolio.Contracts.Validators;
 using Moodfolio.Infrastructure;
 using Moodfolio.Infrastructure.Data;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +21,8 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(Moodfolio.Application.MarketWeather.Queries.GetMarketWeatherQuery).Assembly);
 });
 
-builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<TransactionDtoValidator>();
+builder.Services.AddFluentValidationAutoValidation();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "Data Source=moodfolio.db";
@@ -75,4 +74,6 @@ app.MapControllers();
 
 app.Run();
 
-public partial class Program { }
+public partial class Program
+{
+}

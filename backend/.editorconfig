@@ -1,0 +1,74 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{csproj,props,targets,xml}]
+indent_size = 2
+
+[*.json]
+indent_size = 2
+
+[*.cs]
+# Treat analyzer warnings as warnings, not errors for now
+dotnet_analyzer_diagnostic.severity = warning
+
+# Disable all StyleCop rules - too strict for this project
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.DocumentationRules.severity = none
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.LayoutRules.severity = none
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.MaintainabilityRules.severity = none
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.NamingRules.severity = none
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.OrderingRules.severity = none
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.ReadabilityRules.severity = none
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.SpacingRules.severity = none
+
+# Specifically disable common StyleCop rules
+dotnet_diagnostic.SA0001.severity = none
+dotnet_diagnostic.SA1000.severity = none
+dotnet_diagnostic.SA1001.severity = none
+dotnet_diagnostic.SA1101.severity = none
+dotnet_diagnostic.SA1200.severity = none
+dotnet_diagnostic.SA1201.severity = none
+dotnet_diagnostic.SA1402.severity = none
+dotnet_diagnostic.SA1413.severity = none
+dotnet_diagnostic.SA1516.severity = none
+dotnet_diagnostic.SA1633.severity = none
+
+# Disable overly strict IDE rules
+dotnet_diagnostic.IDE0022.severity = none
+dotnet_diagnostic.IDE0046.severity = none
+dotnet_diagnostic.IDE0078.severity = none
+dotnet_diagnostic.IDE0160.severity = none
+dotnet_diagnostic.IDE1006.severity = none
+
+# Disable CA1000 - static members on generic types
+dotnet_diagnostic.CA1000.severity = none
+
+# Disable documentation file generation error
+dotnet_diagnostic.EnableGenerateDocumentationFile.severity = none
+
+# Keep important security and quality rules
+dotnet_diagnostic.CA2100.severity = error
+dotnet_diagnostic.CA2213.severity = warning
+dotnet_diagnostic.CA1062.severity = warning
+dotnet_diagnostic.CA1063.severity = warning
+dotnet_diagnostic.CA1816.severity = warning
+dotnet_diagnostic.CA2000.severity = warning
+
+# Keep important Roslynator rules
+dotnet_diagnostic.RCS1036.severity = warning
+dotnet_diagnostic.RCS1037.severity = warning
+dotnet_diagnostic.RCS1163.severity = warning
+dotnet_diagnostic.RCS1194.severity = warning
+
+# Code style preferences (non-enforced)
+csharp_style_namespace_declarations = file_scoped:suggestion
+csharp_style_var_for_built_in_types = false:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
