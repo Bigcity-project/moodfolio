@@ -2,6 +2,7 @@ using FluentValidation;
 using Moodfolio.Application.DoNothingSimulation.Services;
 using Moodfolio.Application.MarketWeather.Services;
 using Moodfolio.Application.PortfolioPersona.Services;
+using Moodfolio.Application.Stock.Services;
 using Moodfolio.Contracts.Validators;
 using Moodfolio.Infrastructure;
 using Moodfolio.Infrastructure.Data;
@@ -43,6 +44,8 @@ builder.Services.AddScoped<ITurnoverRateCalculator, TurnoverRateCalculator>();
 builder.Services.AddScoped<IPanicSellRatioCalculator, PanicSellRatioCalculator>();
 builder.Services.AddScoped<IWinRateCalculator, WinRateCalculator>();
 builder.Services.AddScoped<IPersonaClassifier, PersonaClassifier>();
+
+builder.Services.AddSingleton<ITechnicalIndicatorCalculator, TechnicalIndicatorCalculator>();
 
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
     ?? ["http://localhost:8080", "http://localhost:3000"];

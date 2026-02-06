@@ -11,4 +11,7 @@ public interface IMarketDataProvider
     Task<DailyMarketData?> GetLatestMarketDataAsync(CancellationToken cancellationToken = default);
     Task<StockSnapshot?> GetStockSnapshotAsync(string symbol, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<NewsArticle>> GetStockNewsAsync(string symbol, int maxArticles = 20, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<DailyPrice>> GetChartHistoryAsync(string symbol, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<StockSnapshot>> GetPeerStocksAsync(string symbol, CancellationToken cancellationToken = default);
+    Task<FinancialStatements?> GetFinancialStatementsAsync(string symbol, CancellationToken cancellationToken = default);
 }

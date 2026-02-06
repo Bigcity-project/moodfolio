@@ -11,6 +11,9 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { TickerSearch } from '@/components/TickerSearch'
 import { StockIndicators } from '@/components/StockIndicators'
 import { StockNews } from '@/components/StockNews'
+import { TechnicalIndicators } from '@/components/TechnicalIndicators'
+import { PeerStocks } from '@/components/PeerStocks'
+import { FinancialStatements } from '@/components/FinancialStatements'
 import {
   api,
   type MarketWeatherResponse,
@@ -230,7 +233,26 @@ export default function Dashboard() {
                   <StockNews news={stockData.news} />
                 </section>
 
-                {/* Stock Analysis Result */}
+                {/* Technical Indicators + Peer Stocks - two column */}
+                {(stockData.technicalIndicators || stockData.peerStocks) && (
+                  <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {stockData.technicalIndicators && (
+                      <TechnicalIndicators technicals={stockData.technicalIndicators} />
+                    )}
+                    {stockData.peerStocks && (
+                      <PeerStocks peers={stockData.peerStocks} />
+                    )}
+                  </section>
+                )}
+
+                {/* Financial Statements - full width */}
+                {stockData.financials && (
+                  <section className="max-w-4xl mx-auto">
+                    <FinancialStatements financials={stockData.financials} />
+                  </section>
+                )}
+
+                {/* AI Analysis - moved to last */}
                 <section className="max-w-2xl mx-auto">
                   <Card glass className="overflow-hidden">
                     <CardHeader className="pb-2">

@@ -8,29 +8,23 @@ Moodfolio is an Investment Decision Support System that helps users understand t
 
 ## Quick Start
 
+### Docker (Recommended)
 ```bash
-# 安裝依賴
-make install
-
-# 同時啟動前後端開發伺服器
-make dev
-
-# 或分別啟動
-make backend  # http://localhost:5000
-make frontend # http://localhost:8080
+make up          # docker compose up -d (Frontend :8080, Backend :5000)
+make down        # 停止服務
+make logs        # 查看 logs
+make build       # 重新建置 images
+make restart     # 重啟服務
+make clean       # 停止 + 清除 volumes/images
+make test        # 透過 Docker 執行後端測試
 ```
 
-## Common Commands
-
-### Using Makefile (Recommended)
+### Local Development (不使用 Docker)
 ```bash
-make install   # Install all dependencies
-make dev       # Start both frontend and backend
-make backend   # Start backend only (port 5000)
-make frontend  # Start frontend only (port 8080)
-make build     # Build both projects
-make test      # Run all tests
-make clean     # Clean build artifacts
+make install        # 安裝依賴
+make dev-local      # 同時啟動前後端
+make backend-local  # http://localhost:5000
+make frontend-local # http://localhost:8080
 ```
 
 ### Backend (.NET)

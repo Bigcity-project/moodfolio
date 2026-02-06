@@ -39,6 +39,65 @@ export interface StockAnalysisDto {
   reasoning: string
 }
 
+export interface MacdDto {
+  macdLine: number
+  signalLine: number
+  histogram: number
+}
+
+export interface BollingerBandsDto {
+  upperBand: number
+  middleBand: number
+  lowerBand: number
+}
+
+export interface TechnicalIndicatorsDto {
+  rsi: number | null
+  macd: MacdDto | null
+  bollingerBands: BollingerBandsDto | null
+}
+
+export interface PeerStockDto {
+  symbol: string
+  name: string
+  price: number
+  change: number
+  changePercent: number
+}
+
+export interface IncomeStatementQuarterDto {
+  endDate: string
+  revenue: number | null
+  grossProfit: number | null
+  operatingIncome: number | null
+  netIncome: number | null
+  eps: number | null
+}
+
+export interface BalanceSheetQuarterDto {
+  endDate: string
+  totalAssets: number | null
+  totalLiabilities: number | null
+  totalEquity: number | null
+  cash: number | null
+  totalDebt: number | null
+}
+
+export interface CashFlowQuarterDto {
+  endDate: string
+  operatingCashFlow: number | null
+  investingCashFlow: number | null
+  financingCashFlow: number | null
+  freeCashFlow: number | null
+  capitalExpenditure: number | null
+}
+
+export interface FinancialStatementsDto {
+  incomeStatements: IncomeStatementQuarterDto[]
+  balanceSheets: BalanceSheetQuarterDto[]
+  cashFlows: CashFlowQuarterDto[]
+}
+
 export interface StockAnalysisResponse {
   symbol: string
   name: string
@@ -46,6 +105,9 @@ export interface StockAnalysisResponse {
   news: NewsArticleDto[]
   analysis: StockAnalysisDto
   timestamp: string
+  technicalIndicators: TechnicalIndicatorsDto | null
+  peerStocks: PeerStockDto[] | null
+  financials: FinancialStatementsDto | null
 }
 
 async function handleResponse<T>(response: Response): Promise<T> {

@@ -33,40 +33,66 @@ Investment Decision Support System - Understand your trading psychology with AI-
 
 ## Quick Start
 
-### Prerequisites
-- .NET 8 SDK
-- Node.js 18+
-- pnpm (recommended) or npm
+### Option A: Docker (Recommended)
 
-### Backend
+Prerequisites: Docker and Docker Compose
 
 ```bash
-cd backend
-dotnet restore
-dotnet build
-dotnet run --project src/Moodfolio.Api
+# 建置並啟動所有服務
+make up
+
+# 或直接使用 docker compose
+docker compose up -d
 ```
 
-API will be available at `http://localhost:5000`
-
-Swagger UI: `http://localhost:5000/swagger`
-
-### Frontend
+服務啟動後：
+- Frontend: http://localhost:8080
+- Backend API: http://localhost:5000
+- Swagger UI: http://localhost:5000/swagger
 
 ```bash
-cd frontend
-pnpm install
-pnpm dev
+# 查看 logs
+make logs
+
+# 停止服務
+make down
+
+# 停止並清除所有資料 (volumes + images)
+make clean
+
+# 執行後端測試
+make test
 ```
 
-App will be available at `http://localhost:3000`
+### Option B: Local Development
 
-### Run Tests
+Prerequisites: .NET 8 SDK, Node.js 20+, pnpm
 
 ```bash
-cd backend
-dotnet test
+# 安裝依賴
+make install
+
+# 同時啟動前後端開發伺服器
+make dev-local
+
+# 或分別啟動
+make backend-local  # http://localhost:5000
+make frontend-local # http://localhost:8080
 ```
+
+### Makefile Commands
+
+| Command | Description |
+|---------|-------------|
+| `make up` | Docker Compose 啟動所有服務 |
+| `make down` | 停止所有服務 |
+| `make build` | 重新建置 Docker images |
+| `make logs` | 查看服務 logs |
+| `make restart` | 重啟所有服務 |
+| `make clean` | 停止服務並清除 volumes 和 images |
+| `make test` | 透過 Docker 執行後端測試 |
+| `make dev-local` | 本地同時啟動前後端 |
+| `make install` | 本地安裝依賴 |
 
 ## API Endpoints
 

@@ -1,36 +1,46 @@
-.PHONY: dev backend frontend install build test clean
+.PHONY: up down build logs restart clean test dev-local backend-local frontend-local install
 
+# Docker Compose 工作流程
+up:
+	docker compose up -d
+	@echo ""
+	@echo "Moodfolio is running:"
+	@echo "  Frontend: http://localhost:8080"
+	@echo "  Backend:  http://localhost:5000"
+	@echo "  Swagger:  http://localhost:5000/swagger"
+
+down:
+	docker compose down
+
+build:
+	docker compose build
+
+logs:
+	docker compose logs -f
+
+restart:
+	docker compose restart
+
+clean:
+	docker compose down -v --rmi local
+
+# 測試 (透過 Docker multi-stage build)
+test:
+	docker build --target test ./backend
+
+# 本地開發 (不使用 Docker)
 DOTNET := $(HOME)/.dotnet/dotnet
 
-# 同時啟動前後端
-dev:
+dev-local:
 	@echo "Starting Moodfolio development servers..."
-	@make -j2 backend frontend
+	@make -j2 backend-local frontend-local
 
-# 啟動後端 (port 5000)
-backend:
-	cd backend && $(DOTNET) run --project src/Moodfolio.Api --urls "http://localhost:5000"
+backend-local:
+	cd backend && $(DOTNET) run --project src/Moodfolio.Api --urls "http://0.0.0.0:5000"
 
-# 啟動前端 (port 8080)
-frontend:
+frontend-local:
 	cd frontend && pnpm dev --port 8080
 
-# 安裝依賴
 install:
 	cd backend && $(DOTNET) restore
 	cd frontend && pnpm install
-
-# 建置
-build:
-	cd backend && $(DOTNET) build
-	cd frontend && pnpm build
-
-# 測試
-test:
-	cd backend && $(DOTNET) test
-	cd frontend && pnpm test
-
-# 清理
-clean:
-	cd backend && $(DOTNET) clean
-	cd frontend && rm -rf .next node_modules

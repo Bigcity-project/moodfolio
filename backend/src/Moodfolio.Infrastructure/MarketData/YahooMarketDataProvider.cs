@@ -1,3 +1,5 @@
+using System.Net;
+using System.Text.Json;
 using System.Xml.Linq;
 using Microsoft.EntityFrameworkCore;
 using Moodfolio.Application.Common.Interfaces;
@@ -253,6 +255,342 @@ public class YahooMarketDataProvider : IMarketDataProvider
         {
             return [];
         }
+    }
+
+    public async Task<IReadOnlyList<DailyPrice>> GetChartHistoryAsync(string symbol, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var encodedSymbol = Uri.EscapeDataString(symbol.ToUpperInvariant());
+            var url = $"https://query1.finance.yahoo.com/v8/finance/chart/{encodedSymbol}?interval=1d&range=6mo";
+
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0");
+            var json = await httpClient.GetStringAsync(url, cancellationToken);
+
+            using var doc = JsonDocument.Parse(json);
+            var results = doc.RootElement.GetProperty("chart").GetProperty("result");
+
+            if (results.GetArrayLength() == 0)
+            {
+                return [];
+            }
+
+            var result = results[0];
+            var timestamps = result.GetProperty("timestamp");
+            var quote = result.GetProperty("indicators").GetProperty("quote")[0];
+
+            var opens = quote.GetProperty("open");
+            var highs = quote.GetProperty("high");
+            var lows = quote.GetProperty("low");
+            var closes = quote.GetProperty("close");
+            var volumes = quote.GetProperty("volume");
+
+            var prices = new List<DailyPrice>();
+            for (var i = 0; i < timestamps.GetArrayLength(); i++)
+            {
+                if (closes[i].ValueKind == JsonValueKind.Null)
+                {
+                    continue;
+                }
+
+                var unixTime = timestamps[i].GetInt64();
+                var date = DateOnly.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(unixTime).UtcDateTime);
+
+                prices.Add(new DailyPrice
+                {
+                    Date = date,
+                    Symbol = symbol.ToUpperInvariant(),
+                    Open = opens[i].ValueKind != JsonValueKind.Null ? opens[i].GetDecimal() : closes[i].GetDecimal(),
+                    High = highs[i].ValueKind != JsonValueKind.Null ? highs[i].GetDecimal() : closes[i].GetDecimal(),
+                    Low = lows[i].ValueKind != JsonValueKind.Null ? lows[i].GetDecimal() : closes[i].GetDecimal(),
+                    Close = closes[i].GetDecimal(),
+                    Volume = volumes[i].ValueKind != JsonValueKind.Null ? volumes[i].GetInt64() : 0,
+                });
+            }
+
+            return prices;
+        }
+        catch
+        {
+            return [];
+        }
+    }
+
+    public async Task<IReadOnlyList<StockSnapshot>> GetPeerStocksAsync(string symbol, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var encodedSymbol = Uri.EscapeDataString(symbol.ToUpperInvariant());
+            var url = $"https://query1.finance.yahoo.com/v6/finance/recommendationsbysymbol/{encodedSymbol}";
+
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0");
+            var json = await httpClient.GetStringAsync(url, cancellationToken);
+
+            using var doc = JsonDocument.Parse(json);
+            var finance = doc.RootElement.GetProperty("finance");
+            var results = finance.GetProperty("result");
+
+            if (results.GetArrayLength() == 0)
+            {
+                return [];
+            }
+
+            var recommendedSymbols = results[0]
+                .GetProperty("recommendedSymbols")
+                .EnumerateArray()
+                .Take(5)
+                .Select(s => s.GetProperty("symbol").GetString()!)
+                .ToList();
+
+            var tasks = recommendedSymbols.Select(s => GetStockSnapshotAsync(s, cancellationToken));
+            var snapshots = await Task.WhenAll(tasks);
+
+            return snapshots
+                .Where(s => s is not null)
+                .Cast<StockSnapshot>()
+                .ToList();
+        }
+        catch
+        {
+            return [];
+        }
+    }
+
+    public async Task<FinancialStatements?> GetFinancialStatementsAsync(string symbol, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            // Use a single HttpClient+CookieContainer for the entire cookie→crumb→v10 flow
+            using var handler = new HttpClientHandler
+            {
+                UseCookies = true,
+                AllowAutoRedirect = true,
+            };
+            using var httpClient = new HttpClient(handler);
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36");
+
+            // Step 1: GET consent page to obtain cookies (.yahoo.com domain)
+            var consentResponse = await httpClient.GetAsync("https://fc.yahoo.com", cancellationToken);
+            // fc.yahoo.com typically returns 404 but still sets cookies — that's expected
+
+            // Step 2: GET crumb (cookies are automatically sent via CookieContainer)
+            var crumbResponse = await httpClient.GetAsync(
+                "https://query2.finance.yahoo.com/v1/test/getcrumb", cancellationToken);
+
+            if (!crumbResponse.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            var crumb = await crumbResponse.Content.ReadAsStringAsync(cancellationToken);
+            if (string.IsNullOrWhiteSpace(crumb) || crumb.Contains("Too Many"))
+            {
+                return null;
+            }
+
+            // Step 3: v10 quoteSummary with crumb (cookies auto-sent)
+            // Use earnings + earningsHistory + financialData (quarterly statement modules are broken/sparse)
+            var encodedSymbol = Uri.EscapeDataString(symbol.ToUpperInvariant());
+            var encodedCrumb = Uri.EscapeDataString(crumb);
+            var modules = "earnings,earningsHistory,financialData";
+            var url = $"https://query2.finance.yahoo.com/v10/finance/quoteSummary/{encodedSymbol}?modules={modules}&crumb={encodedCrumb}";
+
+            var json = await httpClient.GetStringAsync(url, cancellationToken);
+            using var doc = JsonDocument.Parse(json);
+
+            var result = doc.RootElement
+                .GetProperty("quoteSummary")
+                .GetProperty("result")[0];
+
+            var incomeStatements = ParseIncomeFromEarnings(result);
+            var balanceSheets = ParseBalanceFromFinancialData(result);
+            var cashFlows = ParseCashFlowFromFinancialData(result);
+
+            if (incomeStatements.Count == 0 && balanceSheets.Count == 0 && cashFlows.Count == 0)
+            {
+                return null;
+            }
+
+            return new FinancialStatements
+            {
+                IncomeStatements = incomeStatements,
+                BalanceSheets = balanceSheets,
+                CashFlows = cashFlows,
+            };
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static List<IncomeStatementQuarter> ParseIncomeFromEarnings(JsonElement result)
+    {
+        try
+        {
+            // Build EPS lookup from earningsHistory
+            var epsMap = new Dictionary<string, decimal>();
+            if (result.TryGetProperty("earningsHistory", out var eh) &&
+                eh.TryGetProperty("history", out var history))
+            {
+                foreach (var item in history.EnumerateArray())
+                {
+                    if (item.TryGetProperty("quarter", out var q) &&
+                        q.TryGetProperty("fmt", out var qFmt) &&
+                        item.TryGetProperty("epsActual", out var epsActual) &&
+                        epsActual.TryGetProperty("raw", out var epsRaw) &&
+                        epsRaw.ValueKind == JsonValueKind.Number)
+                    {
+                        var key = qFmt.GetString();
+                        if (key is not null)
+                        {
+                            epsMap[key] = epsRaw.GetDecimal();
+                        }
+                    }
+                }
+            }
+
+            // Build quarterly income from earnings.financialsChart.quarterly
+            var quarterly = result
+                .GetProperty("earnings")
+                .GetProperty("financialsChart")
+                .GetProperty("quarterly");
+
+            var statements = quarterly.EnumerateArray()
+                .Take(4)
+                .Select(q =>
+                {
+                    var dateStr = q.GetProperty("date").GetString() ?? "";
+                    var endDate = ParseQuarterDate(dateStr);
+
+                    // Match EPS by endDate (earningsHistory uses endDate as fmt like "2025-09-30")
+                    var endDateKey = endDate.ToString("yyyy-MM-dd");
+                    var eps = epsMap.TryGetValue(endDateKey, out var epsVal) ? epsVal : (decimal?)null;
+
+                    return new IncomeStatementQuarter
+                    {
+                        EndDate = endDate,
+                        Revenue = GetRawValue(q, "revenue"),
+                        GrossProfit = null,
+                        OperatingIncome = null,
+                        NetIncome = GetRawValue(q, "earnings"),
+                        Eps = eps,
+                    };
+                })
+                .ToList();
+
+            return statements;
+        }
+        catch
+        {
+            return [];
+        }
+    }
+
+    private static List<BalanceSheetQuarter> ParseBalanceFromFinancialData(JsonElement result)
+    {
+        try
+        {
+            if (!result.TryGetProperty("financialData", out var fd))
+            {
+                return [];
+            }
+
+            // financialData is a snapshot (not quarterly), create a single entry
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+            return
+            [
+                new BalanceSheetQuarter
+                {
+                    EndDate = today,
+                    TotalAssets = null,
+                    TotalLiabilities = null,
+                    TotalEquity = null,
+                    Cash = GetRawValue(fd, "totalCash"),
+                    TotalDebt = GetRawValue(fd, "totalDebt"),
+                },
+            ];
+        }
+        catch
+        {
+            return [];
+        }
+    }
+
+    private static List<CashFlowQuarter> ParseCashFlowFromFinancialData(JsonElement result)
+    {
+        try
+        {
+            if (!result.TryGetProperty("financialData", out var fd))
+            {
+                return [];
+            }
+
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
+            var opCf = GetRawValue(fd, "operatingCashflow");
+            var fcf = GetRawValue(fd, "freeCashflow");
+            var capex = opCf.HasValue && fcf.HasValue ? fcf.Value - opCf.Value : (decimal?)null;
+
+            return
+            [
+                new CashFlowQuarter
+                {
+                    EndDate = today,
+                    OperatingCashFlow = opCf,
+                    InvestingCashFlow = null,
+                    FinancingCashFlow = null,
+                    FreeCashFlow = fcf,
+                    CapitalExpenditure = capex,
+                },
+            ];
+        }
+        catch
+        {
+            return [];
+        }
+    }
+
+    /// <summary>
+    /// Parse date string like "1Q2025" or "3Q2024" into end-of-quarter DateOnly.
+    /// </summary>
+    private static DateOnly ParseQuarterDate(string dateStr)
+    {
+        // Format: "1Q2025" → Q1 2025 → end of March
+        try
+        {
+            if (dateStr.Length >= 6 && dateStr[1] == 'Q')
+            {
+                var quarter = dateStr[0] - '0';
+                var year = int.Parse(dateStr[2..]);
+                var endMonth = quarter * 3;
+                return new DateOnly(year, endMonth, DateTime.DaysInMonth(year, endMonth));
+            }
+        }
+        catch
+        {
+            // fall through
+        }
+
+        return DateOnly.FromDateTime(DateTime.UtcNow);
+    }
+
+    private static decimal? GetRawValue(JsonElement element, string propertyName)
+    {
+        if (!element.TryGetProperty(propertyName, out var prop))
+        {
+            return null;
+        }
+
+        if (prop.TryGetProperty("raw", out var raw))
+        {
+            return raw.ValueKind == JsonValueKind.Number ? raw.GetDecimal() : null;
+        }
+
+        return prop.ValueKind == JsonValueKind.Number ? prop.GetDecimal() : null;
     }
 
     private static DateOnly ToDateOnly(LocalDate localDate)
