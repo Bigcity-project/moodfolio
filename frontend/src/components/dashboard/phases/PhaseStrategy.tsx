@@ -40,7 +40,7 @@ export function PhaseStrategy({
       </motion.h2>
 
       <motion.p
-        className="text-white/30 text-sm mb-12"
+        className="text-white/50 text-sm mb-12"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
@@ -67,7 +67,7 @@ export function PhaseStrategy({
 
       {selectedStrategy && (
         <motion.p
-          className="mt-8 text-white/30 text-xs"
+          className="mt-8 text-white/50 text-xs"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >

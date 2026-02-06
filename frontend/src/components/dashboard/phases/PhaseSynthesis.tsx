@@ -36,7 +36,7 @@ export function PhaseSynthesis({ stockData, loading }: PhaseSynthesisProps) {
   if (!stockData) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p className="text-white/30 text-lg">{t('synthesis.empty')}</p>
+        <p className="text-white/50 text-lg">{t('synthesis.empty')}</p>
       </div>
     )
   }
@@ -208,7 +208,7 @@ export function PhaseSynthesis({ stockData, loading }: PhaseSynthesisProps) {
             <text x="50" y="48" textAnchor="middle" className="fill-white text-[10px] font-semibold">
               {positionIn52w.toFixed(0)}%
             </text>
-            <text x="50" y="60" textAnchor="middle" className="fill-white/40 text-[6px]">
+            <text x="50" y="60" textAnchor="middle" className="fill-white/60 text-[6px]">
               {t('synthesis.52wRange')}
             </text>
           </svg>
@@ -263,7 +263,7 @@ export function PhaseSynthesis({ stockData, loading }: PhaseSynthesisProps) {
               return (
                 <div key={peer.symbol} className="flex items-center gap-3 text-sm">
                   <span className="font-semibold text-white/70">{peer.symbol}</span>
-                  <span className="text-white/50 tabular-nums">${peer.price.toFixed(2)}</span>
+                  <span className="text-white/60 tabular-nums">${peer.price.toFixed(2)}</span>
                   <span className={`tabular-nums text-xs ${peerPositive ? 'text-green-400' : 'text-red-400'}`}>
                     {peerPositive ? '+' : ''}{peer.changePercent.toFixed(2)}%
                   </span>

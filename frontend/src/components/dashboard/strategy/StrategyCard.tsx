@@ -51,14 +51,14 @@ export function StrategyCardComponent({ strategy, index, isSelected, onClick, st
         {/* Tier badge */}
         <div className="flex items-center gap-2 mb-3">
           <Icon className="w-4 h-4 text-white/60" />
-          <span className="text-[10px] uppercase tracking-widest text-white/40 font-semibold">
+          <span className="text-[10px] uppercase tracking-widest text-white/55 font-semibold">
             {t(`strategy.tier.${strategy.tier}`)}
           </span>
         </div>
 
         {/* Strategy name */}
         <h3 className="text-lg font-semibold text-white mb-2">{name}</h3>
-        <p className="text-xs text-white/40 mb-4 leading-relaxed line-clamp-2">{description}</p>
+        <p className="text-xs text-white/55 mb-4 leading-relaxed line-clamp-2">{description}</p>
 
         {/* Stats grid */}
         <div className="grid grid-cols-2 gap-3 mb-4">
@@ -85,7 +85,7 @@ export function StrategyCardComponent({ strategy, index, isSelected, onClick, st
 
         {/* CTA */}
         <div className={`flex items-center justify-between text-xs ${
-          isSelected ? 'text-white' : 'text-white/30'
+          isSelected ? 'text-white' : 'text-white/50'
         }`}>
           <span className="font-medium">{instrument}</span>
           <ArrowRight className="w-4 h-4" />
@@ -106,7 +106,7 @@ function StatCell({
 }) {
   return (
     <div className="p-2 rounded-lg bg-white/5">
-      <p className="text-[10px] text-white/30 mb-0.5">{label}</p>
+      <p className="text-[10px] text-white/45 mb-0.5">{label}</p>
       <p className={`text-sm font-semibold tabular-nums ${
         positive === true
           ? 'text-green-400'

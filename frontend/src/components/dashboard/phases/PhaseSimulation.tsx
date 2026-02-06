@@ -70,7 +70,7 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
       </motion.h2>
 
       <motion.p
-        className="text-white/30 text-sm mb-8"
+        className="text-white/50 text-sm mb-8"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
@@ -111,7 +111,7 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
           <div className="p-5 rounded-2xl border border-white/10"
             style={{ background: 'rgba(15, 23, 42, 0.8)' }}
           >
-            <p className="text-[10px] uppercase tracking-widest text-white/40 mb-1">{t('simulation.projectedPnl')}</p>
+            <p className="text-[10px] uppercase tracking-widest text-white/60 mb-1">{t('simulation.projectedPnl')}</p>
             <p className={`text-3xl font-bold tabular-nums ${
               simulation.pnl >= 0 ? 'text-green-400' : 'text-red-400'
             }`}>
@@ -127,8 +127,8 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
           {/* Investment presets */}
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <DollarSign className="w-3.5 h-3.5 text-white/40" />
-              <span className="text-xs text-white/40 uppercase tracking-wider">{t('simulation.investment')}</span>
+              <DollarSign className="w-3.5 h-3.5 text-white/50" />
+              <span className="text-xs text-white/60 uppercase tracking-wider">{t('simulation.investment')}</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {INVESTMENT_PRESETS.map((amount) => (
@@ -138,7 +138,7 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     investment === amount
                       ? 'bg-white/15 text-white border border-white/20'
-                      : 'bg-white/5 text-white/40 hover:bg-white/10 border border-transparent'
+                      : 'bg-white/5 text-white/50 hover:bg-white/10 border border-transparent'
                   }`}
                 >
                   {formatCurrencyShort(amount)}
@@ -150,8 +150,8 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
           {/* Time horizon */}
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Clock className="w-3.5 h-3.5 text-white/40" />
-              <span className="text-xs text-white/40 uppercase tracking-wider">{t('simulation.timeHorizon')}</span>
+              <Clock className="w-3.5 h-3.5 text-white/50" />
+              <span className="text-xs text-white/60 uppercase tracking-wider">{t('simulation.timeHorizon')}</span>
             </div>
             <div className="flex gap-2">
               {TIME_PRESETS.map((preset) => (
@@ -161,7 +161,7 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     timeHorizon === preset.days
                       ? 'bg-white/15 text-white border border-white/20'
-                      : 'bg-white/5 text-white/40 hover:bg-white/10 border border-transparent'
+                      : 'bg-white/5 text-white/50 hover:bg-white/10 border border-transparent'
                   }`}
                 >
                   {preset.label}
@@ -172,19 +172,19 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
 
           {/* Strategy stats summary */}
           <div className="space-y-2 text-xs">
-            <div className="flex justify-between text-white/40">
+            <div className="flex justify-between text-white/50">
               <span>{t('simulation.breakEven')}</span>
               <span className="text-white/60 tabular-nums">${simulation.breakEven.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between text-white/40">
+            <div className="flex justify-between text-white/50">
               <span>{t('simulation.riskReward')}</span>
               <span className="text-white/60 tabular-nums">{simulation.riskRewardRatio.toFixed(1)}x</span>
             </div>
-            <div className="flex justify-between text-white/40">
+            <div className="flex justify-between text-white/50">
               <span>{t('simulation.maxLoss')}</span>
               <span className="text-red-400/70 tabular-nums">-{formatCurrency(investment * strategy.maxLoss / 100)}</span>
             </div>
-            <div className="flex justify-between text-white/40">
+            <div className="flex justify-between text-white/50">
               <span>{t('simulation.maxGain')}</span>
               <span className="text-green-400/70 tabular-nums">+{formatCurrency(investment * strategy.expectedReturn / 100)}</span>
             </div>
@@ -241,7 +241,7 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
                 <Sparkles className={`w-5 h-5 ${stance === 'bullish' ? 'text-teal-400' : 'text-orange-400'}`} />
                 <span className="text-white font-semibold">{t('simulation.summary')}</span>
               </div>
-              <div className="space-y-1 text-xs text-white/50">
+              <div className="space-y-1 text-xs text-white/60">
                 <p>{t('simulation.label.strategy', { name: t(`strategy.${strategy.id}.name`) })}</p>
                 <p>{t('simulation.label.investment', { amount: formatCurrency(investment) })}</p>
                 <p>{t('simulation.label.targetPrice', { price: `$${projectedPrice.toFixed(2)}` })}</p>
@@ -263,7 +263,7 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
 
               <Button
                 variant="ghost"
-                className="w-full text-white/40 hover:text-white/60 text-xs"
+                className="w-full text-white/50 hover:text-white/70 text-xs"
                 onClick={() => setExecuted(false)}
               >
                 {t('simulation.reset')}

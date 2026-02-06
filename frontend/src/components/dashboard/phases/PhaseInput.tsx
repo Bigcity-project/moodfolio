@@ -42,7 +42,7 @@ export function PhaseInput({ onSearch, loading, error }: PhaseInputProps) {
         transition={{ duration: 0.8, delay: 0.4 }}
       >
         <div className="relative">
-          <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-white/30" />
+          <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-white/50" />
           <input
             type="text"
             value={symbol}
@@ -50,7 +50,7 @@ export function PhaseInput({ onSearch, loading, error }: PhaseInputProps) {
             placeholder={t('input.placeholder')}
             maxLength={10}
             disabled={loading}
-            className="w-full h-16 pl-16 pr-16 bg-transparent border-0 border-b-2 border-white/20 text-white text-2xl font-light placeholder:text-white/20 focus:outline-none focus:border-white/50 transition-colors"
+            className="w-full h-16 pl-16 pr-16 bg-transparent border-0 border-b-2 border-white/30 text-white text-2xl font-light placeholder:text-white/40 focus:outline-none focus:border-white/60 transition-colors"
             autoFocus
           />
           {loading && (
@@ -78,7 +78,7 @@ export function PhaseInput({ onSearch, loading, error }: PhaseInputProps) {
       )}
 
       <motion.p
-        className="mt-12 text-white/20 text-xs"
+        className="mt-12 text-white/50 text-xs"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2 }}

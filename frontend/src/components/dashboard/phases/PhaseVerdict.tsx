@@ -159,7 +159,7 @@ export function PhaseVerdict({ stockData, stance, onStanceSelect }: PhaseVerdict
 
       {stance && (
         <motion.p
-          className="mt-8 text-white/30 text-xs"
+          className="mt-8 text-white/50 text-xs"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >

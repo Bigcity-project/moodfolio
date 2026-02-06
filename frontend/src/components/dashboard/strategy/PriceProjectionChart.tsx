@@ -117,7 +117,7 @@ export function PriceProjectionChart({
             <text
               x={PADDING.left - 10} y={y + 4}
               textAnchor="end"
-              className="fill-white/30 text-[10px]"
+              className="fill-white/50 text-[10px]"
             >
               ${price.toFixed(0)}
             </text>
@@ -155,7 +155,7 @@ export function PriceProjectionChart({
       <text
         x={PADDING.left - 10} y={currentY - 8}
         textAnchor="end"
-        className="fill-white/30 text-[9px]"
+        className="fill-white/50 text-[9px]"
       >
         {t('chart.current')}
       </text>
@@ -205,17 +205,17 @@ export function PriceProjectionChart({
         <text
           x={endX} y={projectedY + 24}
           textAnchor="middle"
-          className="fill-white/30 text-[9px]"
+          className="fill-white/50 text-[9px]"
         >
           {t('chart.dragToAdjust')}
         </text>
       </g>
 
       {/* Time labels */}
-      <text x={startX} y={CHART_HEIGHT - 15} textAnchor="middle" className="fill-white/30 text-[10px]">
+      <text x={startX} y={CHART_HEIGHT - 15} textAnchor="middle" className="fill-white/50 text-[10px]">
         {t('chart.today')}
       </text>
-      <text x={endX} y={CHART_HEIGHT - 15} textAnchor="middle" className="fill-white/30 text-[10px]">
+      <text x={endX} y={CHART_HEIGHT - 15} textAnchor="middle" className="fill-white/50 text-[10px]">
         {t('chart.target')}
       </text>
     </svg>
