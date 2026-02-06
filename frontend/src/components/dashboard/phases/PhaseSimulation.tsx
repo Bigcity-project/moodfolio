@@ -6,6 +6,7 @@ import { DollarSign, Clock, Sparkles, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { PriceProjectionChart } from '../strategy/PriceProjectionChart'
 import { simulatePnL } from '@/lib/simulation-engine'
+import { useTranslation } from '@/lib/i18n/context'
 import type { StockAnalysisResponse } from '@/lib/api-client'
 import type { StrategyCard, Stance } from '@/lib/dashboard-types'
 
@@ -24,6 +25,7 @@ const TIME_PRESETS = [
 ]
 
 export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulationProps) {
+  const { t } = useTranslation()
   const currentPrice = stockData.indicators.price
   const [projectedPrice, setProjectedPrice] = useState(() => {
     const direction = stance === 'bullish' ? 1 : -1
@@ -64,7 +66,7 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
       >
-        P&L Simulator
+        {t('simulation.title')}
       </motion.h2>
 
       <motion.p
@@ -74,7 +76,7 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
         viewport={{ once: true }}
         transition={{ delay: 0.2 }}
       >
-        {strategy.name} on {stockData.symbol} &middot; Drag the target price
+        {t('simulation.subtitle', { strategy: t(`strategy.${strategy.id}.name`), symbol: stockData.symbol })}
       </motion.p>
 
       <div className="flex flex-col lg:flex-row gap-8 w-full items-start">
@@ -109,7 +111,7 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
           <div className="p-5 rounded-2xl border border-white/10"
             style={{ background: 'rgba(15, 23, 42, 0.8)' }}
           >
-            <p className="text-[10px] uppercase tracking-widest text-white/40 mb-1">Projected P&L</p>
+            <p className="text-[10px] uppercase tracking-widest text-white/40 mb-1">{t('simulation.projectedPnl')}</p>
             <p className={`text-3xl font-bold tabular-nums ${
               simulation.pnl >= 0 ? 'text-green-400' : 'text-red-400'
             }`}>
@@ -126,7 +128,7 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
           <div>
             <div className="flex items-center gap-2 mb-3">
               <DollarSign className="w-3.5 h-3.5 text-white/40" />
-              <span className="text-xs text-white/40 uppercase tracking-wider">Investment</span>
+              <span className="text-xs text-white/40 uppercase tracking-wider">{t('simulation.investment')}</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {INVESTMENT_PRESETS.map((amount) => (
@@ -149,7 +151,7 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Clock className="w-3.5 h-3.5 text-white/40" />
-              <span className="text-xs text-white/40 uppercase tracking-wider">Time Horizon</span>
+              <span className="text-xs text-white/40 uppercase tracking-wider">{t('simulation.timeHorizon')}</span>
             </div>
             <div className="flex gap-2">
               {TIME_PRESETS.map((preset) => (
@@ -171,19 +173,19 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
           {/* Strategy stats summary */}
           <div className="space-y-2 text-xs">
             <div className="flex justify-between text-white/40">
-              <span>Break Even</span>
+              <span>{t('simulation.breakEven')}</span>
               <span className="text-white/60 tabular-nums">${simulation.breakEven.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-white/40">
-              <span>Risk/Reward</span>
+              <span>{t('simulation.riskReward')}</span>
               <span className="text-white/60 tabular-nums">{simulation.riskRewardRatio.toFixed(1)}x</span>
             </div>
             <div className="flex justify-between text-white/40">
-              <span>Max Loss</span>
+              <span>{t('simulation.maxLoss')}</span>
               <span className="text-red-400/70 tabular-nums">-{formatCurrency(investment * strategy.maxLoss / 100)}</span>
             </div>
             <div className="flex justify-between text-white/40">
-              <span>Max Gain</span>
+              <span>{t('simulation.maxGain')}</span>
               <span className="text-green-400/70 tabular-nums">+{formatCurrency(investment * strategy.expectedReturn / 100)}</span>
             </div>
           </div>
@@ -200,7 +202,7 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
                 }`}
               >
                 <Sparkles className="w-4 h-4 mr-2" />
-                Execute Strategy
+                {t('simulation.execute')}
               </Button>
 
               {/* Burst particles */}
@@ -237,23 +239,25 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
             >
               <div className="flex items-center gap-2">
                 <Sparkles className={`w-5 h-5 ${stance === 'bullish' ? 'text-teal-400' : 'text-orange-400'}`} />
-                <span className="text-white font-semibold">Strategy Summary</span>
+                <span className="text-white font-semibold">{t('simulation.summary')}</span>
               </div>
               <div className="space-y-1 text-xs text-white/50">
-                <p>Strategy: {strategy.name}</p>
-                <p>Investment: {formatCurrency(investment)}</p>
-                <p>Target Price: ${projectedPrice.toFixed(2)}</p>
-                <p>Time Horizon: {timeHorizon} days</p>
+                <p>{t('simulation.label.strategy', { name: t(`strategy.${strategy.id}.name`) })}</p>
+                <p>{t('simulation.label.investment', { amount: formatCurrency(investment) })}</p>
+                <p>{t('simulation.label.targetPrice', { price: `$${projectedPrice.toFixed(2)}` })}</p>
+                <p>{t('simulation.label.horizon', { days: timeHorizon })}</p>
                 <p className={simulation.pnl >= 0 ? 'text-green-400' : 'text-red-400'}>
-                  Projected P&L: {simulation.pnl >= 0 ? '+' : ''}{formatCurrency(simulation.pnl)} ({simulation.returnPercent.toFixed(2)}%)
+                  {t('simulation.label.pnl', {
+                    pnl: `${simulation.pnl >= 0 ? '+' : ''}${formatCurrency(simulation.pnl)}`,
+                    percent: `${simulation.returnPercent >= 0 ? '+' : ''}${simulation.returnPercent.toFixed(2)}`,
+                  })}
                 </p>
               </div>
 
               <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
                 <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <p className="text-[10px] text-amber-400/80 leading-relaxed">
-                  This is a simulation only. Past performance does not guarantee future results.
-                  Always consult a financial advisor before making investment decisions.
+                  {t('simulation.disclaimer')}
                 </p>
               </div>
 
@@ -262,7 +266,7 @@ export function PhaseSimulation({ stockData, strategy, stance }: PhaseSimulation
                 className="w-full text-white/40 hover:text-white/60 text-xs"
                 onClick={() => setExecuted(false)}
               >
-                Reset Simulation
+                {t('simulation.reset')}
               </Button>
             </motion.div>
           )}

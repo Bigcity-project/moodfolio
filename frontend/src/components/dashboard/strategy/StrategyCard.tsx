@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Shield, Zap, Target, ArrowRight } from 'lucide-react'
+import { useTranslation } from '@/lib/i18n/context'
 import type { StrategyCard as StrategyCardType } from '@/lib/dashboard-types'
 
 interface StrategyCardProps {
@@ -13,15 +14,20 @@ interface StrategyCardProps {
 }
 
 const tierConfig = {
-  conservative: { icon: Shield, label: 'Conservative', accent: 'from-blue-500/20 to-blue-600/10' },
-  aggressive: { icon: Zap, label: 'Aggressive', accent: 'from-purple-500/20 to-purple-600/10' },
-  strategic: { icon: Target, label: 'Strategic', accent: 'from-emerald-500/20 to-emerald-600/10' },
+  conservative: { icon: Shield, accent: 'from-blue-500/20 to-blue-600/10' },
+  aggressive: { icon: Zap, accent: 'from-purple-500/20 to-purple-600/10' },
+  strategic: { icon: Target, accent: 'from-emerald-500/20 to-emerald-600/10' },
 }
 
 export function StrategyCardComponent({ strategy, index, isSelected, onClick, stance }: StrategyCardProps) {
+  const { t } = useTranslation()
   const config = tierConfig[strategy.tier]
   const Icon = config.icon
   const stanceColor = stance === 'bullish' ? 'teal' : 'orange'
+
+  const name = t(`strategy.${strategy.id}.name`)
+  const description = t(`strategy.${strategy.id}.desc`, strategy.descriptionParams)
+  const instrument = t(`strategy.${strategy.id}.instrument`)
 
   return (
     <motion.button
@@ -46,32 +52,32 @@ export function StrategyCardComponent({ strategy, index, isSelected, onClick, st
         <div className="flex items-center gap-2 mb-3">
           <Icon className="w-4 h-4 text-white/60" />
           <span className="text-[10px] uppercase tracking-widest text-white/40 font-semibold">
-            {config.label}
+            {t(`strategy.tier.${strategy.tier}`)}
           </span>
         </div>
 
         {/* Strategy name */}
-        <h3 className="text-lg font-semibold text-white mb-2">{strategy.name}</h3>
-        <p className="text-xs text-white/40 mb-4 leading-relaxed line-clamp-2">{strategy.description}</p>
+        <h3 className="text-lg font-semibold text-white mb-2">{name}</h3>
+        <p className="text-xs text-white/40 mb-4 leading-relaxed line-clamp-2">{description}</p>
 
         {/* Stats grid */}
         <div className="grid grid-cols-2 gap-3 mb-4">
           <StatCell
-            label="Expected Return"
+            label={t('strategy.label.expectedReturn')}
             value={`${strategy.expectedReturn > 0 ? '+' : ''}${strategy.expectedReturn.toFixed(1)}%`}
             positive={strategy.expectedReturn > 0}
           />
           <StatCell
-            label="Max Loss"
+            label={t('strategy.label.maxLoss')}
             value={`-${strategy.maxLoss.toFixed(1)}%`}
             positive={false}
           />
           <StatCell
-            label="Break Even"
+            label={t('strategy.label.breakEven')}
             value={`$${strategy.breakEven.toFixed(2)}`}
           />
           <StatCell
-            label="Risk/Reward"
+            label={t('strategy.label.riskReward')}
             value={`${strategy.riskReward.toFixed(1)}x`}
             positive={strategy.riskReward >= 1}
           />
@@ -81,7 +87,7 @@ export function StrategyCardComponent({ strategy, index, isSelected, onClick, st
         <div className={`flex items-center justify-between text-xs ${
           isSelected ? 'text-white' : 'text-white/30'
         }`}>
-          <span className="font-medium">{strategy.instrument}</span>
+          <span className="font-medium">{instrument}</span>
           <ArrowRight className="w-4 h-4" />
         </div>
       </div>

@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { computeStrategies } from '@/lib/strategy-engine'
 import { StrategyCardComponent } from '../strategy/StrategyCard'
+import { useTranslation } from '@/lib/i18n/context'
 import type { StockAnalysisResponse } from '@/lib/api-client'
 import type { Stance, StrategyCard } from '@/lib/dashboard-types'
 
@@ -24,6 +25,7 @@ export function PhaseStrategy({
     () => computeStrategies(stockData, stance),
     [stockData, stance]
   )
+  const { t } = useTranslation()
 
   return (
     <div className="flex flex-col items-center justify-center w-full px-6">
@@ -34,7 +36,7 @@ export function PhaseStrategy({
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        Pick Your Strategy
+        {t('strategy.title')}
       </motion.h2>
 
       <motion.p
@@ -44,7 +46,7 @@ export function PhaseStrategy({
         viewport={{ once: true }}
         transition={{ delay: 0.2 }}
       >
-        {stance === 'bullish' ? 'Bullish' : 'Bearish'} strategies for {stockData.symbol}
+        {t(`strategy.subtitle.${stance}`, { symbol: stockData.symbol })}
       </motion.p>
 
       {/* Cards carousel */}
@@ -69,7 +71,7 @@ export function PhaseStrategy({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          Scroll down to simulate P&L
+          {t('strategy.scrollHint')}
         </motion.p>
       )}
     </div>

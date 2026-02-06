@@ -46,7 +46,7 @@ export function StockIndicators({ symbol, name, indicators }: StockIndicatorsPro
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="text-lg text-slate-900 dark:text-white">{symbol}</CardTitle>
-            <p className="text-sm text-slate-500 dark:text-slate-400">{name}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-300">{name}</p>
           </div>
           <div className="text-right">
             <p className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
@@ -89,7 +89,7 @@ export function StockIndicators({ symbol, name, indicators }: StockIndicatorsPro
 function IndicatorCell({ label, value }: { label: string; value: string }) {
   return (
     <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800">
-      <p className="text-xs text-slate-500 dark:text-slate-400 mb-0.5">{label}</p>
+      <p className="text-xs text-slate-500 dark:text-slate-300 mb-0.5">{label}</p>
       <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 tabular-nums">{value}</p>
     </div>
   )

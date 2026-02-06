@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Search, Loader2, AlertTriangle } from 'lucide-react'
+import { useTranslation } from '@/lib/i18n/context'
 
 interface PhaseInputProps {
   onSearch: (symbol: string) => void
@@ -12,6 +13,7 @@ interface PhaseInputProps {
 
 export function PhaseInput({ onSearch, loading, error }: PhaseInputProps) {
   const [symbol, setSymbol] = useState('')
+  const { t } = useTranslation()
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -29,7 +31,7 @@ export function PhaseInput({ onSearch, loading, error }: PhaseInputProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
       >
-        What are you watching?
+        {t('input.title')}
       </motion.p>
 
       <motion.form
@@ -45,7 +47,7 @@ export function PhaseInput({ onSearch, loading, error }: PhaseInputProps) {
             type="text"
             value={symbol}
             onChange={(e) => setSymbol(e.target.value.toUpperCase())}
-            placeholder="Enter a ticker..."
+            placeholder={t('input.placeholder')}
             maxLength={10}
             disabled={loading}
             className="w-full h-16 pl-16 pr-16 bg-transparent border-0 border-b-2 border-white/20 text-white text-2xl font-light placeholder:text-white/20 focus:outline-none focus:border-white/50 transition-colors"
@@ -81,7 +83,7 @@ export function PhaseInput({ onSearch, loading, error }: PhaseInputProps) {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2 }}
       >
-        Press Enter to analyze
+        {t('input.hint')}
       </motion.p>
     </div>
   )

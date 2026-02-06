@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useCallback, useState, useEffect } from 'react'
+import { useTranslation } from '@/lib/i18n/context'
 
 interface PriceProjectionChartProps {
   currentPrice: number
@@ -27,6 +28,7 @@ export function PriceProjectionChart({
   onProjectedPriceChange,
   stance,
 }: PriceProjectionChartProps) {
+  const { t } = useTranslation()
   const svgRef = useRef<SVGSVGElement>(null)
   const [isDragging, setIsDragging] = useState(false)
 
@@ -155,7 +157,7 @@ export function PriceProjectionChart({
         textAnchor="end"
         className="fill-white/30 text-[9px]"
       >
-        Current
+        {t('chart.current')}
       </text>
 
       {/* Break-even line */}
@@ -168,7 +170,7 @@ export function PriceProjectionChart({
         x={PADDING.left + PLOT_WIDTH + 8} y={breakEvenY + 4}
         className="fill-amber-400/60 text-[10px]"
       >
-        BE: ${breakEven.toFixed(2)}
+        {t('chart.breakEven')} ${breakEven.toFixed(2)}
       </text>
 
       {/* Current price dot */}
@@ -205,16 +207,16 @@ export function PriceProjectionChart({
           textAnchor="middle"
           className="fill-white/30 text-[9px]"
         >
-          Drag to adjust
+          {t('chart.dragToAdjust')}
         </text>
       </g>
 
       {/* Time labels */}
       <text x={startX} y={CHART_HEIGHT - 15} textAnchor="middle" className="fill-white/30 text-[10px]">
-        Today
+        {t('chart.today')}
       </text>
       <text x={endX} y={CHART_HEIGHT - 15} textAnchor="middle" className="fill-white/30 text-[10px]">
-        Target
+        {t('chart.target')}
       </text>
     </svg>
   )

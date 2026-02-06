@@ -10,14 +10,12 @@ export type StrategyTier = 'conservative' | 'aggressive' | 'strategic'
 export interface StrategyCard {
   id: string
   tier: StrategyTier
-  name: string
-  description: string
-  instrument: string
   expectedReturn: number
   maxLoss: number
   leverage: number
   breakEven: number
   riskReward: number
+  descriptionParams?: Record<string, string | number>
 }
 
 export interface SimulationResult {

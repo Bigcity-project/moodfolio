@@ -3,6 +3,7 @@
 import { useEffect, useMemo } from 'react'
 import { useDashboardState } from '@/hooks/useDashboardState'
 import { useSnapScroll } from '@/hooks/useSnapScroll'
+import { useTranslation } from '@/lib/i18n/context'
 import { PhaseNavigation } from './PhaseNavigation'
 import { ParticleBackground } from './ParticleBackground'
 import { PhaseInput } from './phases/PhaseInput'
@@ -21,6 +22,7 @@ export function DashboardShell() {
     setSelectedStrategy,
     setActivePhase,
   } = useDashboardState()
+  const { locale, setLocale } = useTranslation()
 
   const { containerRef, activePhase, scrollToPhase } = useSnapScroll(5)
 
@@ -66,6 +68,14 @@ export function DashboardShell() {
       className="dashboard-dark"
       style={stanceColor ? { '--stance-color-rgb': stanceColor } as React.CSSProperties : undefined}
     >
+      {/* Locale toggle */}
+      <button
+        onClick={() => setLocale(locale === 'en' ? 'zh-TW' : 'en')}
+        className="fixed top-5 right-5 z-50 px-3 py-1.5 rounded-lg text-xs font-medium text-white/50 hover:text-white/80 bg-white/5 hover:bg-white/10 border border-white/10 transition-all"
+      >
+        {locale === 'en' ? '中文' : 'EN'}
+      </button>
+
       <ParticleBackground
         activePhase={state.activePhase}
         stance={state.stance}

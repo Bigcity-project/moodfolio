@@ -10,6 +10,7 @@ import { PeerStocks } from '@/components/PeerStocks'
 import { FinancialStatements } from '@/components/FinancialStatements'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { useTranslation } from '@/lib/i18n/context'
 import type { StockAnalysisResponse } from '@/lib/api-client'
 
 interface PhaseSynthesisProps {
@@ -21,12 +22,13 @@ export function PhaseSynthesis({ stockData, loading }: PhaseSynthesisProps) {
   const [leftOpen, setLeftOpen] = useState(false)
   const [rightOpen, setRightOpen] = useState(false)
   const [financialsOpen, setFinancialsOpen] = useState(false)
+  const { t } = useTranslation()
 
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-screen gap-4">
         <Loader2 className="w-12 h-12 animate-spin text-blue-400" />
-        <p className="text-white/60">Analyzing stock...</p>
+        <p className="text-white/60">{t('synthesis.loading')}</p>
       </div>
     )
   }
@@ -34,7 +36,7 @@ export function PhaseSynthesis({ stockData, loading }: PhaseSynthesisProps) {
   if (!stockData) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p className="text-white/30 text-lg">Search a ticker to begin</p>
+        <p className="text-white/30 text-lg">{t('synthesis.empty')}</p>
       </div>
     )
   }
@@ -79,7 +81,7 @@ export function PhaseSynthesis({ stockData, loading }: PhaseSynthesisProps) {
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
                     <Brain className="w-5 h-5 text-purple-400" />
-                    <CardTitle className="text-lg text-white">AI Analysis</CardTitle>
+                    <CardTitle className="text-lg text-white">{t('synthesis.aiAnalysis')}</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
@@ -92,10 +94,10 @@ export function PhaseSynthesis({ stockData, loading }: PhaseSynthesisProps) {
                   }`}>
                     {stockData.analysis.recommendation}
                   </div>
-                  <p className="text-sm text-slate-300 leading-relaxed">
+                  <p className="text-sm text-slate-200 leading-relaxed">
                     {stockData.analysis.summary}
                   </p>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs text-slate-300 leading-relaxed">
                     {stockData.analysis.reasoning}
                   </p>
                 </CardContent>
@@ -207,23 +209,23 @@ export function PhaseSynthesis({ stockData, loading }: PhaseSynthesisProps) {
               {positionIn52w.toFixed(0)}%
             </text>
             <text x="50" y="60" textAnchor="middle" className="fill-white/40 text-[6px]">
-              52W Range
+              {t('synthesis.52wRange')}
             </text>
           </svg>
         </motion.div>
 
         {/* Edge hints */}
         <motion.div
-          className="flex justify-between text-xs text-white/25 mb-6"
+          className="flex justify-between text-xs text-white/60 mb-6"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
+          animate={{ opacity: [0, 1, 0.6, 1] }}
+          transition={{ delay: 1, duration: 2 }}
         >
-          <span className="flex items-center gap-1">
-            <ChevronRight className="w-3 h-3 rotate-180" /> News & AI
+          <span className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
+            <ChevronRight className="w-3 h-3 rotate-180" /> {t('synthesis.newsAi')}
           </span>
-          <span className="flex items-center gap-1">
-            Technicals <ChevronRight className="w-3 h-3" />
+          <span className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
+            {t('synthesis.technicals')} <ChevronRight className="w-3 h-3" />
           </span>
         </motion.div>
 
@@ -236,11 +238,11 @@ export function PhaseSynthesis({ stockData, loading }: PhaseSynthesisProps) {
           >
             <Button
               variant="ghost"
-              className="text-white/40 hover:text-white/70"
+              className="text-white/60 hover:text-white/90 border border-white/10 hover:border-white/20 hover:bg-white/5"
               onClick={() => setFinancialsOpen(!financialsOpen)}
             >
               <FileSpreadsheet className="w-4 h-4 mr-2" />
-              View Financials
+              {t('synthesis.viewFinancials')}
             </Button>
           </motion.div>
         )}

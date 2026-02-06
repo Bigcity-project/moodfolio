@@ -64,7 +64,7 @@ export function FinancialStatements({ financials }: FinancialStatementsProps) {
               className={`flex-1 text-xs font-semibold py-2 px-3 rounded-lg transition-colors ${
                 activeTab === tab.key
                   ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+                  : 'text-slate-500 dark:text-slate-300 hover:text-slate-700 dark:hover:text-slate-300'
               }`}
             >
               {tab.label}
@@ -88,7 +88,7 @@ export function FinancialStatements({ financials }: FinancialStatementsProps) {
 
 function NoData() {
   return (
-    <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">
+    <p className="text-sm text-slate-500 dark:text-slate-300 text-center py-4">
       No data available
     </p>
   )
@@ -161,9 +161,9 @@ function FinancialTable<T extends { endDate: string }>({ data, rows, formatValue
     <table className="w-full text-sm">
       <thead>
         <tr className="border-b border-slate-200 dark:border-slate-700">
-          <th className="text-left text-xs font-semibold text-slate-500 dark:text-slate-400 py-2 pr-4" />
+          <th className="text-left text-xs font-semibold text-slate-500 dark:text-slate-300 py-2 pr-4" />
           {data.map((item) => (
-            <th key={item.endDate} className="text-right text-xs font-semibold text-slate-500 dark:text-slate-400 py-2 px-2">
+            <th key={item.endDate} className="text-right text-xs font-semibold text-slate-500 dark:text-slate-300 py-2 px-2">
               {formatQuarter(item.endDate)}
             </th>
           ))}

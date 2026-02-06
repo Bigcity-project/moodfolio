@@ -1,0 +1,92 @@
+export const zhTW: Record<string, string> = {
+  // 導覽
+  'nav.input': '輸入',
+  'nav.synthesis': '綜合分析',
+  'nav.verdict': '判定',
+  'nav.strategy': '策略',
+  'nav.simulation': '模擬',
+
+  // 階段 1：輸入
+  'input.title': '正在關注什麼？',
+  'input.placeholder': '請輸入股票代碼...',
+  'input.hint': '按 Enter 開始分析',
+
+  // 階段 2：綜合分析
+  'synthesis.loading': '分析中...',
+  'synthesis.empty': '搜尋股票代碼以開始',
+  'synthesis.aiAnalysis': 'AI 分析',
+  'synthesis.newsAi': '新聞與 AI',
+  'synthesis.technicals': '技術指標',
+  'synthesis.viewFinancials': '檢視財務報表',
+  'synthesis.52wRange': '52 週區間',
+
+  // 階段 3：判定
+  'verdict.title': '市場判定',
+  'verdict.bull': '多方',
+  'verdict.bear': '空方',
+  'verdict.bullishPercent': '看多 {percent}%',
+  'verdict.bearishPercent': '{percent}% 看空',
+  'verdict.seeUpside': '看漲',
+  'verdict.seeDownside': '看跌',
+  'verdict.scrollHint': '向下捲動以瀏覽策略',
+
+  // 階段 4：策略
+  'strategy.title': '選擇策略',
+  'strategy.subtitle.bullish': '{symbol} 的看多策略',
+  'strategy.subtitle.bearish': '{symbol} 的看空策略',
+  'strategy.scrollHint': '向下捲動以進行損益模擬',
+  'strategy.tier.conservative': '穩健型',
+  'strategy.tier.aggressive': '積極型',
+  'strategy.tier.strategic': '策略型',
+  'strategy.label.expectedReturn': '預期報酬',
+  'strategy.label.maxLoss': '最大虧損',
+  'strategy.label.breakEven': '損益兩平',
+  'strategy.label.riskReward': '風險報酬比',
+
+  // 策略細節
+  'strategy.bull-conservative.name': '現貨 / ETF 買入',
+  'strategy.bull-conservative.desc': '買入並持有股票或等值 ETF。低風險，直接市場曝險。',
+  'strategy.bull-conservative.instrument': '股票 / ETF',
+  'strategy.bull-aggressive.name': '槓桿 / 買權',
+  'strategy.bull-aggressive.desc': '以 2-3 倍槓桿融資買入或買進買權。高報酬，高風險。',
+  'strategy.bull-aggressive.instrument': '融資 / 買權',
+  'strategy.bull-strategic.name': '多頭買權價差',
+  'strategy.bull-strategic.desc': '買進 {lowerStrike} 買權，賣出 {upperStrike} 買權。風險固定。',
+  'strategy.bull-strategic.instrument': '選擇權價差',
+  'strategy.bear-conservative.name': '反向 ETF / 避險',
+  'strategy.bear-conservative.desc': '買入反向 ETF 從下跌中獲利。操作簡單的避險方式。',
+  'strategy.bear-conservative.instrument': '反向 ETF',
+  'strategy.bear-aggressive.name': '買入賣權 / 放空',
+  'strategy.bear-aggressive.desc': '買進賣權或放空股票。高潛在報酬，伴隨高風險。',
+  'strategy.bear-aggressive.instrument': '賣權 / 放空',
+  'strategy.bear-strategic.name': '空頭賣權價差',
+  'strategy.bear-strategic.desc': '買進 {upperStrike} 賣權，賣出 {lowerStrike} 賣權。預估權利金：{premium}%。',
+  'strategy.bear-strategic.instrument': '選擇權價差',
+
+  // 階段 5：模擬
+  'simulation.title': '損益模擬器',
+  'simulation.subtitle': '{symbol} 的{strategy} · 拖曳設定目標價',
+  'simulation.projectedPnl': '預估損益',
+  'simulation.investment': '投資金額',
+  'simulation.timeHorizon': '投資期間',
+  'simulation.breakEven': '損益兩平',
+  'simulation.riskReward': '風險報酬比',
+  'simulation.maxLoss': '最大虧損',
+  'simulation.maxGain': '最大獲利',
+  'simulation.execute': '執行策略',
+  'simulation.summary': '策略摘要',
+  'simulation.label.strategy': '策略：{name}',
+  'simulation.label.investment': '投資金額：{amount}',
+  'simulation.label.targetPrice': '目標價：{price}',
+  'simulation.label.horizon': '投資期間：{days} 天',
+  'simulation.label.pnl': '預估損益：{pnl}（{percent}%）',
+  'simulation.disclaimer': '此為模擬結果，過去績效不代表未來表現。投資前請諮詢專業財務顧問。',
+  'simulation.reset': '重設模擬',
+
+  // 圖表
+  'chart.today': '今日',
+  'chart.target': '目標',
+  'chart.current': '現價',
+  'chart.dragToAdjust': '拖曳調整',
+  'chart.breakEven': '損平：',
+}

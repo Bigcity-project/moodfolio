@@ -25,39 +25,30 @@ function computeBullishStrategies(
   rsi: number | null | undefined,
 ): StrategyCard[] {
   const upsidePercent = high52 > price ? ((high52 - price) / price) * 100 : 5
+  const downsideToLow = price > low52 ? ((price - low52) / price) * 100 : 1
 
-  // Conservative: Spot / ETF
   const conservative: StrategyCard = {
     id: 'bull-conservative',
     tier: 'conservative',
-    name: 'Spot / ETF Buy',
-    description: 'Buy and hold the stock or equivalent ETF. Low risk, direct market exposure.',
-    instrument: 'Equity / ETF',
     expectedReturn: round(upsidePercent),
-    maxLoss: round(((price - low52) / price) * 100),
+    maxLoss: round(downsideToLow),
     leverage: 1,
     breakEven: price,
-    riskReward: upsidePercent > 0
-      ? round(upsidePercent / (((price - low52) / price) * 100 || 1))
-      : 1,
+    riskReward: round(upsidePercent / (downsideToLow || 1)),
   }
 
-  // Aggressive: Margin 2x / Call Option
   const leveragedReturn = upsidePercent * 2.5
+  const leveragedLoss = Math.min(100, downsideToLow * 2.5)
   const aggressive: StrategyCard = {
     id: 'bull-aggressive',
     tier: 'aggressive',
-    name: 'Leveraged / Call Option',
-    description: 'Margin buy at 2-3x leverage or long call option. Higher reward, higher risk.',
-    instrument: 'Margin / Call Option',
     expectedReturn: round(leveragedReturn),
-    maxLoss: round(Math.min(100, ((price - low52) / price) * 100 * 2.5)),
+    maxLoss: round(leveragedLoss),
     leverage: 2.5,
     breakEven: round(price * 1.02),
-    riskReward: round(leveragedReturn / (Math.min(100, ((price - low52) / price) * 100 * 2.5) || 1)),
+    riskReward: round(leveragedReturn / (leveragedLoss || 1)),
   }
 
-  // Strategic: Bull Call Spread
   const upper = bb?.upperBand ?? price * 1.1
   const middle = bb?.middleBand ?? price
   const lower = bb?.lowerBand ?? price * 0.9
@@ -67,14 +58,15 @@ function computeBullishStrategies(
   const strategic: StrategyCard = {
     id: 'bull-strategic',
     tier: 'strategic',
-    name: 'Bull Call Spread',
-    description: `Buy call at $${round(lower)} strike, sell call at $${round(upper)} strike. Defined risk.`,
-    instrument: 'Options Spread',
     expectedReturn: round(maxProfit),
     maxLoss: round(maxLossSpread),
     leverage: 1,
     breakEven: round(lower + (upper - lower) * 0.3),
     riskReward: round(maxProfit / (maxLossSpread || 1)),
+    descriptionParams: {
+      lowerStrike: `$${round(lower)}`,
+      upperStrike: `$${round(upper)}`,
+    },
   }
 
   return [conservative, aggressive, strategic]
@@ -88,37 +80,30 @@ function computeBearishStrategies(
   rsi: number | null | undefined,
 ): StrategyCard[] {
   const downsidePercent = price > low52 ? ((price - low52) / price) * 100 : 5
+  const upsideToHigh = high52 > price ? ((high52 - price) / price) * 100 : 1
 
-  // Hedging: Inverse ETF
   const hedging: StrategyCard = {
     id: 'bear-conservative',
     tier: 'conservative',
-    name: 'Inverse ETF / Hedge',
-    description: 'Buy inverse ETF to profit from decline. Simple hedge with limited complexity.',
-    instrument: 'Inverse ETF',
     expectedReturn: round(downsidePercent),
-    maxLoss: round(((high52 - price) / price) * 100),
+    maxLoss: round(upsideToHigh),
     leverage: 1,
     breakEven: price,
-    riskReward: round(downsidePercent / (((high52 - price) / price) * 100 || 1)),
+    riskReward: round(downsidePercent / (upsideToHigh || 1)),
   }
 
-  // Speculative: Long Put / Short
   const leveragedDown = downsidePercent * 2.5
+  const leveragedLoss = Math.min(100, upsideToHigh * 2.5)
   const speculative: StrategyCard = {
     id: 'bear-aggressive',
     tier: 'aggressive',
-    name: 'Long Put / Short Sale',
-    description: 'Buy put options or short the stock. High reward potential with significant risk.',
-    instrument: 'Put Option / Short',
     expectedReturn: round(leveragedDown),
-    maxLoss: round(Math.min(100, ((high52 - price) / price) * 100 * 2.5)),
+    maxLoss: round(leveragedLoss),
     leverage: 2.5,
     breakEven: round(price * 0.98),
-    riskReward: round(leveragedDown / (Math.min(100, ((high52 - price) / price) * 100 * 2.5) || 1)),
+    riskReward: round(leveragedDown / (leveragedLoss || 1)),
   }
 
-  // Income: Covered Call / Bear Put Spread
   const upper = bb?.upperBand ?? price * 1.1
   const middle = bb?.middleBand ?? price
   const lower = bb?.lowerBand ?? price * 0.9
@@ -131,14 +116,16 @@ function computeBearishStrategies(
   const income: StrategyCard = {
     id: 'bear-strategic',
     tier: 'strategic',
-    name: 'Bear Put Spread',
-    description: `Buy put at $${round(upper)} strike, sell put at $${round(lower)} strike. Est. premium: ${premiumEstimate.toFixed(1)}%.`,
-    instrument: 'Options Spread',
     expectedReturn: round(maxProfit),
     maxLoss: round(maxLossSpread),
     leverage: 1,
     breakEven: round(upper - (upper - lower) * 0.3),
     riskReward: round(maxProfit / (maxLossSpread || 1)),
+    descriptionParams: {
+      upperStrike: `$${round(upper)}`,
+      lowerStrike: `$${round(lower)}`,
+      premium: premiumEstimate.toFixed(1),
+    },
   }
 
   return [hedging, speculative, income]

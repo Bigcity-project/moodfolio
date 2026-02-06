@@ -35,7 +35,7 @@ export function StockNews({ news }: StockNewsProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">
+          <p className="text-sm text-slate-500 dark:text-slate-300 text-center py-4">
             No recent news available for this stock.
           </p>
         </CardContent>
@@ -67,11 +67,11 @@ export function StockNews({ news }: StockNewsProps) {
                 {article.title}
               </p>
               {article.description && (
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
+                <p className="text-xs text-slate-500 dark:text-slate-300 mt-1 line-clamp-1">
                   {article.description}
                 </p>
               )}
-              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+              <p className="text-xs text-slate-400 dark:text-slate-400 mt-1">
                 {timeAgo(article.publishedAt)}
               </p>
             </div>

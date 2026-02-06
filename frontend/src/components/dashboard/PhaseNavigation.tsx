@@ -2,13 +2,14 @@
 
 import { motion } from 'framer-motion'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { useTranslation } from '@/lib/i18n/context'
 
-const PHASE_LABELS = [
-  'The Input',
-  'The Synthesis',
-  'The Verdict',
-  'Strategy',
-  'Simulation',
+const PHASE_KEYS = [
+  'nav.input',
+  'nav.synthesis',
+  'nav.verdict',
+  'nav.strategy',
+  'nav.simulation',
 ]
 
 interface PhaseNavigationProps {
@@ -18,12 +19,15 @@ interface PhaseNavigationProps {
 }
 
 export function PhaseNavigation({ activePhase, onNavigate, maxPhase }: PhaseNavigationProps) {
+  const { t } = useTranslation()
+
   return (
     <nav className="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3">
-      {PHASE_LABELS.map((label, i) => {
+      {PHASE_KEYS.map((key, i) => {
         const phase = i + 1
         const isActive = phase === activePhase
         const isReachable = phase <= maxPhase
+        const label = t(key)
 
         return (
           <Tooltip key={phase}>
@@ -32,7 +36,7 @@ export function PhaseNavigation({ activePhase, onNavigate, maxPhase }: PhaseNavi
                 onClick={() => isReachable && onNavigate(phase)}
                 disabled={!isReachable}
                 className="relative group"
-                aria-label={`Go to ${label}`}
+                aria-label={label}
               >
                 <motion.div
                   className={`w-3 h-3 rounded-full border-2 transition-colors ${

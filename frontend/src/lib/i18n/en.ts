@@ -1,0 +1,92 @@
+export const en: Record<string, string> = {
+  // Navigation
+  'nav.input': 'The Input',
+  'nav.synthesis': 'The Synthesis',
+  'nav.verdict': 'The Verdict',
+  'nav.strategy': 'Strategy',
+  'nav.simulation': 'Simulation',
+
+  // Phase 1: Input
+  'input.title': 'What are you watching?',
+  'input.placeholder': 'Enter a ticker...',
+  'input.hint': 'Press Enter to analyze',
+
+  // Phase 2: Synthesis
+  'synthesis.loading': 'Analyzing stock...',
+  'synthesis.empty': 'Search a ticker to begin',
+  'synthesis.aiAnalysis': 'AI Analysis',
+  'synthesis.newsAi': 'News & AI',
+  'synthesis.technicals': 'Technicals',
+  'synthesis.viewFinancials': 'View Financials',
+  'synthesis.52wRange': '52W Range',
+
+  // Phase 3: Verdict
+  'verdict.title': 'The Verdict',
+  'verdict.bull': 'BULL',
+  'verdict.bear': 'BEAR',
+  'verdict.bullishPercent': 'Bullish {percent}%',
+  'verdict.bearishPercent': '{percent}% Bearish',
+  'verdict.seeUpside': 'I see Upside',
+  'verdict.seeDownside': 'I see Downside',
+  'verdict.scrollHint': 'Scroll down to explore strategies',
+
+  // Phase 4: Strategy
+  'strategy.title': 'Pick Your Strategy',
+  'strategy.subtitle.bullish': 'Bullish strategies for {symbol}',
+  'strategy.subtitle.bearish': 'Bearish strategies for {symbol}',
+  'strategy.scrollHint': 'Scroll down to simulate P&L',
+  'strategy.tier.conservative': 'Conservative',
+  'strategy.tier.aggressive': 'Aggressive',
+  'strategy.tier.strategic': 'Strategic',
+  'strategy.label.expectedReturn': 'Expected Return',
+  'strategy.label.maxLoss': 'Max Loss',
+  'strategy.label.breakEven': 'Break Even',
+  'strategy.label.riskReward': 'Risk/Reward',
+
+  // Strategy details
+  'strategy.bull-conservative.name': 'Spot / ETF Buy',
+  'strategy.bull-conservative.desc': 'Buy and hold the stock or equivalent ETF. Low risk, direct market exposure.',
+  'strategy.bull-conservative.instrument': 'Equity / ETF',
+  'strategy.bull-aggressive.name': 'Leveraged / Call Option',
+  'strategy.bull-aggressive.desc': 'Margin buy at 2-3x leverage or long call option. Higher reward, higher risk.',
+  'strategy.bull-aggressive.instrument': 'Margin / Call Option',
+  'strategy.bull-strategic.name': 'Bull Call Spread',
+  'strategy.bull-strategic.desc': 'Buy call at {lowerStrike} strike, sell call at {upperStrike} strike. Defined risk.',
+  'strategy.bull-strategic.instrument': 'Options Spread',
+  'strategy.bear-conservative.name': 'Inverse ETF / Hedge',
+  'strategy.bear-conservative.desc': 'Buy inverse ETF to profit from decline. Simple hedge with limited complexity.',
+  'strategy.bear-conservative.instrument': 'Inverse ETF',
+  'strategy.bear-aggressive.name': 'Long Put / Short Sale',
+  'strategy.bear-aggressive.desc': 'Buy put options or short the stock. High reward potential with significant risk.',
+  'strategy.bear-aggressive.instrument': 'Put Option / Short',
+  'strategy.bear-strategic.name': 'Bear Put Spread',
+  'strategy.bear-strategic.desc': 'Buy put at {upperStrike} strike, sell put at {lowerStrike} strike. Est. premium: {premium}%.',
+  'strategy.bear-strategic.instrument': 'Options Spread',
+
+  // Phase 5: Simulation
+  'simulation.title': 'P&L Simulator',
+  'simulation.subtitle': '{strategy} on {symbol} · Drag the target price',
+  'simulation.projectedPnl': 'Projected P&L',
+  'simulation.investment': 'Investment',
+  'simulation.timeHorizon': 'Time Horizon',
+  'simulation.breakEven': 'Break Even',
+  'simulation.riskReward': 'Risk/Reward',
+  'simulation.maxLoss': 'Max Loss',
+  'simulation.maxGain': 'Max Gain',
+  'simulation.execute': 'Execute Strategy',
+  'simulation.summary': 'Strategy Summary',
+  'simulation.label.strategy': 'Strategy: {name}',
+  'simulation.label.investment': 'Investment: {amount}',
+  'simulation.label.targetPrice': 'Target Price: {price}',
+  'simulation.label.horizon': 'Time Horizon: {days} days',
+  'simulation.label.pnl': 'Projected P&L: {pnl} ({percent}%)',
+  'simulation.disclaimer': 'This is a simulation only. Past performance does not guarantee future results. Always consult a financial advisor before making investment decisions.',
+  'simulation.reset': 'Reset Simulation',
+
+  // Chart
+  'chart.today': 'Today',
+  'chart.target': 'Target',
+  'chart.current': 'Current',
+  'chart.dragToAdjust': 'Drag to adjust',
+  'chart.breakEven': 'BE:',
+}
