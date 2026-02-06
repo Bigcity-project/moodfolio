@@ -60,7 +60,8 @@ export const zhTW: Record<string, string> = {
   'strategy.bear-aggressive.desc': '買進賣權或放空股票。高潛在報酬，伴隨高風險。',
   'strategy.bear-aggressive.instrument': '賣權 / 放空',
   'strategy.bear-strategic.name': '空頭賣權價差',
-  'strategy.bear-strategic.desc': '買進 {upperStrike} 賣權，賣出 {lowerStrike} 賣權。預估權利金：{premium}%。',
+  'strategy.bear-strategic.desc': '買進 {upperStrike} 賣權，賣出 {lowerStrike} 賣權。風險固定。',
+  'strategy.bear-strategic.desc.withPremium': '買進 {upperStrike} 賣權，賣出 {lowerStrike} 賣權。預估權利金：{premium}%。',
   'strategy.bear-strategic.instrument': '選擇權價差',
 
   // 階段 5：模擬

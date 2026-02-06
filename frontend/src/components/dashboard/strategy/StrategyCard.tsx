@@ -26,7 +26,10 @@ export function StrategyCardComponent({ strategy, index, isSelected, onClick, st
   const stanceColor = stance === 'bullish' ? 'teal' : 'orange'
 
   const name = t(`strategy.${strategy.id}.name`)
-  const description = t(`strategy.${strategy.id}.desc`, strategy.descriptionParams)
+  const descKey = strategy.descriptionParams?.premium
+    ? `strategy.${strategy.id}.desc.withPremium`
+    : `strategy.${strategy.id}.desc`
+  const description = t(descKey, strategy.descriptionParams)
   const instrument = t(`strategy.${strategy.id}.instrument`)
 
   return (

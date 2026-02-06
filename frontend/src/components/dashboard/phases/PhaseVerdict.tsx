@@ -27,14 +27,18 @@ function computeBullBearProbability(data: StockAnalysisResponse): { bull: number
   }
 
   const histogram = data.technicalIndicators?.macd?.histogram
-  if (histogram !== null && histogram !== undefined) {
-    const macdSignal = Math.max(-10, Math.min(10, histogram * 2))
+  if (histogram !== null && histogram !== undefined && data.indicators.price > 0) {
+    // Normalize histogram by price so the signal is comparable across stocks
+    const normalizedHistogram = (histogram / data.indicators.price) * 100
+    const macdSignal = Math.max(-10, Math.min(10, normalizedHistogram * 10))
     bull += macdSignal
   }
 
   const range = data.indicators.fiftyTwoWeekHigh - data.indicators.fiftyTwoWeekLow
   if (range > 0) {
-    const position = (data.indicators.price - data.indicators.fiftyTwoWeekLow) / range
+    // Clamp position to [0,1] — price can briefly exceed 52w range due to data lag
+    const rawPosition = (data.indicators.price - data.indicators.fiftyTwoWeekLow) / range
+    const position = Math.max(0, Math.min(1, rawPosition))
     const rangeSignal = (0.5 - position) * 20
     bull += rangeSignal
   }

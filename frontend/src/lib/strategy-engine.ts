@@ -17,6 +17,11 @@ export function computeStrategies(
   return computeBearishStrategies(price, high52, low52, bb, rsi)
 }
 
+function safeRatio(numerator: number, denominator: number): number {
+  if (denominator === 0) return 0
+  return round(numerator / denominator)
+}
+
 function computeBullishStrategies(
   price: number,
   high52: number,
@@ -24,8 +29,9 @@ function computeBullishStrategies(
   bb: { upperBand: number; middleBand: number; lowerBand: number } | null | undefined,
   rsi: number | null | undefined,
 ): StrategyCard[] {
-  const upsidePercent = high52 > price ? ((high52 - price) / price) * 100 : 5
-  const downsideToLow = price > low52 ? ((price - low52) / price) * 100 : 1
+  // Real data only — clamp to 0 when price is at/beyond 52w boundary
+  const upsidePercent = Math.max(0, ((high52 - price) / price) * 100)
+  const downsideToLow = Math.max(0, ((price - low52) / price) * 100)
 
   const conservative: StrategyCard = {
     id: 'bull-conservative',
@@ -34,7 +40,7 @@ function computeBullishStrategies(
     maxLoss: round(downsideToLow),
     leverage: 1,
     breakEven: price,
-    riskReward: round(upsidePercent / (downsideToLow || 1)),
+    riskReward: safeRatio(upsidePercent, downsideToLow),
   }
 
   const leveragedReturn = upsidePercent * 2.5
@@ -45,31 +51,36 @@ function computeBullishStrategies(
     expectedReturn: round(leveragedReturn),
     maxLoss: round(leveragedLoss),
     leverage: 2.5,
-    breakEven: round(price * 1.02),
-    riskReward: round(leveragedReturn / (leveragedLoss || 1)),
+    breakEven: price,
+    riskReward: safeRatio(leveragedReturn, leveragedLoss),
   }
 
-  const upper = bb?.upperBand ?? price * 1.1
-  const middle = bb?.middleBand ?? price
-  const lower = bb?.lowerBand ?? price * 0.9
-  const maxProfit = ((upper - middle) / middle) * 100
-  const maxLossSpread = ((middle - lower) / middle) * 100
+  const strategies: StrategyCard[] = [conservative, aggressive]
 
-  const strategic: StrategyCard = {
-    id: 'bull-strategic',
-    tier: 'strategic',
-    expectedReturn: round(maxProfit),
-    maxLoss: round(maxLossSpread),
-    leverage: 1,
-    breakEven: round(lower + (upper - lower) * 0.3),
-    riskReward: round(maxProfit / (maxLossSpread || 1)),
-    descriptionParams: {
-      lowerStrike: `$${round(lower)}`,
-      upperStrike: `$${round(upper)}`,
-    },
+  // Only show strategic (spread) when real Bollinger Bands data exists
+  if (bb) {
+    const maxProfit = ((bb.upperBand - bb.middleBand) / bb.middleBand) * 100
+    const maxLossSpread = ((bb.middleBand - bb.lowerBand) / bb.middleBand) * 100
+
+    const strategic: StrategyCard = {
+      id: 'bull-strategic',
+      tier: 'strategic',
+      expectedReturn: round(maxProfit),
+      maxLoss: round(maxLossSpread),
+      leverage: 1,
+      breakEven: round(bb.lowerBand + (maxLossSpread / (maxLossSpread + maxProfit)) * (bb.upperBand - bb.lowerBand)),
+      riskReward: safeRatio(maxProfit, maxLossSpread),
+      lowerStrike: round(bb.lowerBand),
+      upperStrike: round(bb.upperBand),
+      descriptionParams: {
+        lowerStrike: `$${round(bb.lowerBand)}`,
+        upperStrike: `$${round(bb.upperBand)}`,
+      },
+    }
+    strategies.push(strategic)
   }
 
-  return [conservative, aggressive, strategic]
+  return strategies
 }
 
 function computeBearishStrategies(
@@ -79,8 +90,9 @@ function computeBearishStrategies(
   bb: { upperBand: number; middleBand: number; lowerBand: number } | null | undefined,
   rsi: number | null | undefined,
 ): StrategyCard[] {
-  const downsidePercent = price > low52 ? ((price - low52) / price) * 100 : 5
-  const upsideToHigh = high52 > price ? ((high52 - price) / price) * 100 : 1
+  // Real data only — clamp to 0 when price is at/beyond 52w boundary
+  const downsidePercent = Math.max(0, ((price - low52) / price) * 100)
+  const upsideToHigh = Math.max(0, ((high52 - price) / price) * 100)
 
   const hedging: StrategyCard = {
     id: 'bear-conservative',
@@ -89,7 +101,7 @@ function computeBearishStrategies(
     maxLoss: round(upsideToHigh),
     leverage: 1,
     breakEven: price,
-    riskReward: round(downsidePercent / (upsideToHigh || 1)),
+    riskReward: safeRatio(downsidePercent, upsideToHigh),
   }
 
   const leveragedDown = downsidePercent * 2.5
@@ -100,35 +112,42 @@ function computeBearishStrategies(
     expectedReturn: round(leveragedDown),
     maxLoss: round(leveragedLoss),
     leverage: 2.5,
-    breakEven: round(price * 0.98),
-    riskReward: round(leveragedDown / (leveragedLoss || 1)),
+    breakEven: price,
+    riskReward: safeRatio(leveragedDown, leveragedLoss),
   }
 
-  const upper = bb?.upperBand ?? price * 1.1
-  const middle = bb?.middleBand ?? price
-  const lower = bb?.lowerBand ?? price * 0.9
-  const premiumEstimate = rsi !== null && rsi !== undefined
-    ? ((rsi / 100) * 3) + 1
-    : 2
-  const maxProfit = ((middle - lower) / middle) * 100
-  const maxLossSpread = ((upper - middle) / middle) * 100
+  const strategies: StrategyCard[] = [hedging, speculative]
 
-  const income: StrategyCard = {
-    id: 'bear-strategic',
-    tier: 'strategic',
-    expectedReturn: round(maxProfit),
-    maxLoss: round(maxLossSpread),
-    leverage: 1,
-    breakEven: round(upper - (upper - lower) * 0.3),
-    riskReward: round(maxProfit / (maxLossSpread || 1)),
-    descriptionParams: {
-      upperStrike: `$${round(upper)}`,
-      lowerStrike: `$${round(lower)}`,
-      premium: premiumEstimate.toFixed(1),
-    },
+  // Only show strategic (spread) when real Bollinger Bands data exists
+  if (bb) {
+    const maxProfit = ((bb.middleBand - bb.lowerBand) / bb.middleBand) * 100
+    const maxLossSpread = ((bb.upperBand - bb.middleBand) / bb.middleBand) * 100
+
+    const descriptionParams: Record<string, string | number> = {
+      upperStrike: `$${round(bb.upperBand)}`,
+      lowerStrike: `$${round(bb.lowerBand)}`,
+    }
+    // Only include premium estimate when real RSI data exists
+    if (rsi !== null && rsi !== undefined) {
+      descriptionParams.premium = (((rsi / 100) * 3) + 1).toFixed(1)
+    }
+
+    const income: StrategyCard = {
+      id: 'bear-strategic',
+      tier: 'strategic',
+      expectedReturn: round(maxProfit),
+      maxLoss: round(maxLossSpread),
+      leverage: 1,
+      breakEven: round(bb.upperBand - (maxLossSpread / (maxLossSpread + maxProfit)) * (bb.upperBand - bb.lowerBand)),
+      riskReward: safeRatio(maxProfit, maxLossSpread),
+      lowerStrike: round(bb.lowerBand),
+      upperStrike: round(bb.upperBand),
+      descriptionParams,
+    }
+    strategies.push(income)
   }
 
-  return [hedging, speculative, income]
+  return strategies
 }
 
 function round(n: number): number {

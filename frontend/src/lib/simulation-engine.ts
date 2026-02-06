@@ -6,8 +6,11 @@ export function simulatePnL(
   projectedPrice: number,
   investmentAmount: number,
 ): SimulationResult {
-  const priceChange = projectedPrice - currentPrice
-  const priceChangePercent = (priceChange / currentPrice) * 100
+  if (currentPrice <= 0) {
+    return { pnl: 0, returnPercent: 0, breakEven: strategy.breakEven, riskRewardRatio: strategy.riskReward }
+  }
+
+  const priceChangePercent = ((projectedPrice - currentPrice) / currentPrice) * 100
 
   switch (strategy.tier) {
     case 'conservative':
@@ -15,7 +18,7 @@ export function simulatePnL(
     case 'aggressive':
       return simulateLeveraged(priceChangePercent, investmentAmount, strategy)
     case 'strategic':
-      return simulateSpread(currentPrice, projectedPrice, investmentAmount, strategy)
+      return simulateSpread(projectedPrice, investmentAmount, strategy)
     default:
       return simulateSpot(priceChangePercent, investmentAmount, strategy)
   }
@@ -62,26 +65,46 @@ function simulateLeveraged(
 }
 
 function simulateSpread(
-  currentPrice: number,
   projectedPrice: number,
   investmentAmount: number,
   strategy: StrategyCard,
 ): SimulationResult {
-  // Linear interpolation between max loss and max profit
   const isBull = strategy.id.startsWith('bull')
-  const direction = isBull
-    ? (projectedPrice - currentPrice) / currentPrice
-    : (currentPrice - projectedPrice) / currentPrice
-
-  // Normalize to [-1, 1] range based on expected return and max loss
-  const maxReturnRange = strategy.expectedReturn + strategy.maxLoss
-  const normalizedDirection = (direction * 100) / (maxReturnRange || 1)
+  const lower = strategy.lowerStrike ?? strategy.breakEven
+  const upper = strategy.upperStrike ?? strategy.breakEven
+  const strikeWidth = upper - lower
 
   let returnPercent: number
-  if (normalizedDirection >= 0) {
-    returnPercent = Math.min(strategy.expectedReturn, normalizedDirection * strategy.expectedReturn)
+
+  if (strikeWidth <= 0) {
+    // Degenerate spread (should not happen with real BB data)
+    returnPercent = 0
+  } else if (isBull) {
+    // Bull call spread P&L profile:
+    //   projected <= lower strike → max loss
+    //   projected >= upper strike → max profit
+    //   between strikes → linear interpolation
+    if (projectedPrice <= lower) {
+      returnPercent = -strategy.maxLoss
+    } else if (projectedPrice >= upper) {
+      returnPercent = strategy.expectedReturn
+    } else {
+      const fraction = (projectedPrice - lower) / strikeWidth
+      returnPercent = -strategy.maxLoss + fraction * (strategy.expectedReturn + strategy.maxLoss)
+    }
   } else {
-    returnPercent = Math.max(-strategy.maxLoss, normalizedDirection * strategy.maxLoss)
+    // Bear put spread P&L profile:
+    //   projected >= upper strike → max loss
+    //   projected <= lower strike → max profit
+    //   between strikes → linear interpolation
+    if (projectedPrice >= upper) {
+      returnPercent = -strategy.maxLoss
+    } else if (projectedPrice <= lower) {
+      returnPercent = strategy.expectedReturn
+    } else {
+      const fraction = (upper - projectedPrice) / strikeWidth
+      returnPercent = -strategy.maxLoss + fraction * (strategy.expectedReturn + strategy.maxLoss)
+    }
   }
 
   const pnl = (returnPercent / 100) * investmentAmount

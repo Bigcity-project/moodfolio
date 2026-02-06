@@ -16,6 +16,9 @@ export interface StrategyCard {
   breakEven: number
   riskReward: number
   descriptionParams?: Record<string, string | number>
+  /** Numeric strike prices for spread strategies (used in P&L simulation) */
+  upperStrike?: number
+  lowerStrike?: number
 }
 
 export interface SimulationResult {

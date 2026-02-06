@@ -60,7 +60,8 @@ export const en: Record<string, string> = {
   'strategy.bear-aggressive.desc': 'Buy put options or short the stock. High reward potential with significant risk.',
   'strategy.bear-aggressive.instrument': 'Put Option / Short',
   'strategy.bear-strategic.name': 'Bear Put Spread',
-  'strategy.bear-strategic.desc': 'Buy put at {upperStrike} strike, sell put at {lowerStrike} strike. Est. premium: {premium}%.',
+  'strategy.bear-strategic.desc': 'Buy put at {upperStrike} strike, sell put at {lowerStrike} strike. Defined risk.',
+  'strategy.bear-strategic.desc.withPremium': 'Buy put at {upperStrike} strike, sell put at {lowerStrike} strike. Est. premium: {premium}%.',
   'strategy.bear-strategic.instrument': 'Options Spread',
 
   // Phase 5: Simulation
