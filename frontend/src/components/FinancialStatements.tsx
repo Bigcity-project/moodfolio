@@ -51,7 +51,7 @@ export function FinancialStatements({ financials }: FinancialStatementsProps) {
           <div className="p-2 rounded-full bg-teal-100 dark:bg-teal-900/30">
             <FileSpreadsheet className="w-5 h-5 text-teal-600 dark:text-teal-400" />
           </div>
-          <CardTitle className="text-lg text-slate-900 dark:text-white">Financial Statements</CardTitle>
+          <CardTitle className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Financial Statements</CardTitle>
         </div>
       </CardHeader>
       <CardContent>
@@ -61,7 +61,7 @@ export function FinancialStatements({ financials }: FinancialStatementsProps) {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex-1 text-xs font-semibold py-2 px-3 rounded-lg transition-colors ${
+              className={`flex-1 text-[11px] font-bold uppercase tracking-wide py-2 px-3 rounded-lg transition-colors ${
                 activeTab === tab.key
                   ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
                   : 'text-slate-500 dark:text-slate-300 hover:text-slate-700 dark:hover:text-slate-300'
@@ -161,9 +161,9 @@ function FinancialTable<T extends { endDate: string }>({ data, rows, formatValue
     <table className="w-full text-sm">
       <thead>
         <tr className="border-b border-slate-200 dark:border-slate-700">
-          <th className="text-left text-xs font-semibold text-slate-500 dark:text-slate-300 py-2 pr-4" />
+          <th className="text-left text-xs font-bold text-slate-500 dark:text-slate-300 py-2 pr-4" />
           {data.map((item) => (
-            <th key={item.endDate} className="text-right text-xs font-semibold text-slate-500 dark:text-slate-300 py-2 px-2">
+            <th key={item.endDate} className="text-right text-xs font-bold text-slate-500 dark:text-slate-300 py-2 px-2">
               {formatQuarter(item.endDate)}
             </th>
           ))}
@@ -172,7 +172,7 @@ function FinancialTable<T extends { endDate: string }>({ data, rows, formatValue
       <tbody>
         {rows.map((row) => (
           <tr key={String(row.key)} className="border-b border-slate-100 dark:border-slate-800 last:border-0">
-            <td className="text-xs font-medium text-slate-600 dark:text-slate-300 py-2 pr-4 whitespace-nowrap">
+            <td className="text-xs font-semibold text-slate-600 dark:text-slate-300 py-2 pr-4 whitespace-nowrap">
               {row.label}
             </td>
             {data.map((item) => {
@@ -181,7 +181,7 @@ function FinancialTable<T extends { endDate: string }>({ data, rows, formatValue
               return (
                 <td
                   key={item.endDate}
-                  className={`text-right text-xs tabular-nums py-2 px-2 ${
+                  className={`text-right text-sm font-semibold tabular-nums py-2 px-2 ${
                     isNegative
                       ? 'text-red-600 dark:text-red-400'
                       : 'text-slate-700 dark:text-slate-200'

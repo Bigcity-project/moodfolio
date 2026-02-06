@@ -81,7 +81,7 @@ export function PhaseSynthesis({ stockData, loading }: PhaseSynthesisProps) {
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
                     <Brain className="w-5 h-5 text-purple-400" />
-                    <CardTitle className="text-lg text-white">{t('synthesis.aiAnalysis')}</CardTitle>
+                    <CardTitle className="text-xl font-bold tracking-tight text-white">{t('synthesis.aiAnalysis')}</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
@@ -141,7 +141,7 @@ export function PhaseSynthesis({ stockData, loading }: PhaseSynthesisProps) {
         transition={{ duration: 0.6 }}
       >
         <motion.h2
-          className="text-7xl font-bold text-white mb-2 tracking-tight"
+          className="text-8xl font-black text-white mb-2 tracking-tighter"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
@@ -150,7 +150,7 @@ export function PhaseSynthesis({ stockData, loading }: PhaseSynthesisProps) {
         </motion.h2>
 
         <motion.p
-          className="text-white/50 text-sm mb-8"
+          className="text-white/50 text-base font-medium tracking-wide mb-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
@@ -165,14 +165,14 @@ export function PhaseSynthesis({ stockData, loading }: PhaseSynthesisProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <p className="text-4xl font-bold text-white tabular-nums">
+          <p className="text-5xl font-extrabold text-white tabular-nums">
             ${stockData.indicators.price.toFixed(2)}
           </p>
           <div className={`flex items-center justify-center gap-2 mt-2 ${
             isPositive ? 'text-green-400' : 'text-red-400'
           }`}>
             {isPositive ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />}
-            <span className="text-lg font-semibold tabular-nums">
+            <span className="text-xl font-bold tabular-nums">
               {isPositive ? '+' : ''}{stockData.indicators.change.toFixed(2)} ({isPositive ? '+' : ''}{stockData.indicators.changePercent.toFixed(2)}%)
             </span>
           </div>
@@ -262,8 +262,8 @@ export function PhaseSynthesis({ stockData, loading }: PhaseSynthesisProps) {
               const peerPositive = peer.change >= 0
               return (
                 <div key={peer.symbol} className="flex items-center gap-3 text-sm">
-                  <span className="font-semibold text-white/70">{peer.symbol}</span>
-                  <span className="text-white/60 tabular-nums">${peer.price.toFixed(2)}</span>
+                  <span className="font-bold text-white/80">{peer.symbol}</span>
+                  <span className="font-medium text-white/70 tabular-nums">${peer.price.toFixed(2)}</span>
                   <span className={`tabular-nums text-xs ${peerPositive ? 'text-green-400' : 'text-red-400'}`}>
                     {peerPositive ? '+' : ''}{peer.changePercent.toFixed(2)}%
                   </span>

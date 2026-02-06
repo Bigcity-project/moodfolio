@@ -31,7 +31,7 @@ export function StockNews({ news }: StockNewsProps) {
             <div className="p-2 rounded-full bg-blue-100 dark:bg-blue-900/30">
               <Newspaper className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
-            <CardTitle className="text-lg text-slate-900 dark:text-white">News</CardTitle>
+            <CardTitle className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">News</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
@@ -50,7 +50,7 @@ export function StockNews({ news }: StockNewsProps) {
           <div className="p-2 rounded-full bg-blue-100 dark:bg-blue-900/30">
             <Newspaper className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           </div>
-          <CardTitle className="text-lg text-slate-900 dark:text-white">News</CardTitle>
+          <CardTitle className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">News</CardTitle>
         </div>
       </CardHeader>
       <CardContent className="space-y-1">
@@ -63,7 +63,7 @@ export function StockNews({ news }: StockNewsProps) {
             className="flex items-start gap-3 p-2.5 -mx-1 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"
           >
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-slate-700 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
+              <p className="text-[15px] font-semibold leading-snug text-slate-700 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
                 {article.title}
               </p>
               {article.description && (

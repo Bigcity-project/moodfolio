@@ -34,7 +34,7 @@ export function TechnicalIndicators({ technicals }: TechnicalIndicatorsProps) {
           <div className="p-2 rounded-full bg-indigo-100 dark:bg-indigo-900/30">
             <BarChart3 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
           </div>
-          <CardTitle className="text-lg text-slate-900 dark:text-white">Technical Indicators</CardTitle>
+          <CardTitle className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Technical Indicators</CardTitle>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -42,12 +42,12 @@ export function TechnicalIndicators({ technicals }: TechnicalIndicatorsProps) {
         {technicals.rsi !== null && (
           <div className={`p-3 rounded-xl ${getRsiBgColor(technicals.rsi)}`}>
             <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wide">RSI (14)</span>
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">RSI (14)</span>
               <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${getRsiBgColor(technicals.rsi)} ${getRsiColor(technicals.rsi)}`}>
                 {getRsiLabel(technicals.rsi)}
               </span>
             </div>
-            <p className={`text-2xl font-bold tabular-nums ${getRsiColor(technicals.rsi)}`}>
+            <p className={`text-3xl font-extrabold tabular-nums ${getRsiColor(technicals.rsi)}`}>
               {technicals.rsi.toFixed(2)}
             </p>
             {/* RSI bar */}
@@ -71,23 +71,23 @@ export function TechnicalIndicators({ technicals }: TechnicalIndicatorsProps) {
         {/* MACD */}
         {technicals.macd && (
           <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800">
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wide mb-2">MACD (12, 26, 9)</p>
+            <p className="text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider mb-2">MACD (12, 26, 9)</p>
             <div className="grid grid-cols-3 gap-2">
               <div>
                 <p className="text-[10px] text-slate-400 dark:text-slate-300">MACD</p>
-                <p className={`text-sm font-semibold tabular-nums ${technicals.macd.macdLine >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                <p className={`text-base font-bold tabular-nums ${technicals.macd.macdLine >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                   {technicals.macd.macdLine.toFixed(2)}
                 </p>
               </div>
               <div>
                 <p className="text-[10px] text-slate-400 dark:text-slate-300">Signal</p>
-                <p className="text-sm font-semibold tabular-nums text-slate-700 dark:text-slate-200">
+                <p className="text-base font-bold tabular-nums text-slate-700 dark:text-slate-200">
                   {technicals.macd.signalLine.toFixed(2)}
                 </p>
               </div>
               <div>
                 <p className="text-[10px] text-slate-400 dark:text-slate-300">Histogram</p>
-                <p className={`text-sm font-semibold tabular-nums ${technicals.macd.histogram >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                <p className={`text-base font-bold tabular-nums ${technicals.macd.histogram >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                   {technicals.macd.histogram.toFixed(2)}
                 </p>
               </div>
@@ -98,23 +98,23 @@ export function TechnicalIndicators({ technicals }: TechnicalIndicatorsProps) {
         {/* Bollinger Bands */}
         {technicals.bollingerBands && (
           <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800">
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wide mb-2">Bollinger Bands (20, 2)</p>
+            <p className="text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider mb-2">Bollinger Bands (20, 2)</p>
             <div className="grid grid-cols-3 gap-2">
               <div>
                 <p className="text-[10px] text-slate-400 dark:text-slate-300">Upper</p>
-                <p className="text-sm font-semibold tabular-nums text-slate-700 dark:text-slate-200">
+                <p className="text-base font-bold tabular-nums text-slate-700 dark:text-slate-200">
                   ${technicals.bollingerBands.upperBand.toFixed(2)}
                 </p>
               </div>
               <div>
                 <p className="text-[10px] text-slate-400 dark:text-slate-300">Middle</p>
-                <p className="text-sm font-semibold tabular-nums text-blue-600 dark:text-blue-400">
+                <p className="text-base font-bold tabular-nums text-blue-600 dark:text-blue-400">
                   ${technicals.bollingerBands.middleBand.toFixed(2)}
                 </p>
               </div>
               <div>
                 <p className="text-[10px] text-slate-400 dark:text-slate-300">Lower</p>
-                <p className="text-sm font-semibold tabular-nums text-slate-700 dark:text-slate-200">
+                <p className="text-base font-bold tabular-nums text-slate-700 dark:text-slate-200">
                   ${technicals.bollingerBands.lowerBand.toFixed(2)}
                 </p>
               </div>

@@ -45,16 +45,16 @@ export function StockIndicators({ symbol, name, indicators }: StockIndicatorsPro
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-lg text-slate-900 dark:text-white">{symbol}</CardTitle>
-            <p className="text-sm text-slate-500 dark:text-slate-300">{name}</p>
+            <CardTitle className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{symbol}</CardTitle>
+            <p className="text-sm font-medium text-slate-500 dark:text-slate-300">{name}</p>
           </div>
           <div className="text-right">
-            <p className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
+            <p className="text-3xl font-extrabold text-slate-900 dark:text-white tabular-nums">
               ${indicators.price.toFixed(2)}
             </p>
             <div className={`flex items-center justify-end gap-1 ${isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
               <ChangeIcon className="w-4 h-4" />
-              <span className="text-sm font-semibold tabular-nums">
+              <span className="text-base font-bold tabular-nums">
                 {isPositive ? '+' : ''}{indicators.change.toFixed(2)} ({isPositive ? '+' : ''}{indicators.changePercent.toFixed(2)}%)
               </span>
             </div>
@@ -90,7 +90,7 @@ function IndicatorCell({ label, value }: { label: string; value: string }) {
   return (
     <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800">
       <p className="text-xs text-slate-500 dark:text-slate-300 mb-0.5">{label}</p>
-      <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 tabular-nums">{value}</p>
+      <p className="text-base font-bold text-slate-700 dark:text-slate-200 tabular-nums">{value}</p>
     </div>
   )
 }
