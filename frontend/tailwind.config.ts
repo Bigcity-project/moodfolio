@@ -53,6 +53,11 @@ const config: Config = {
           stormy: "hsl(var(--mood-stormy))",
           "stormy-glow": "hsl(var(--mood-stormy-glow))",
         },
+        stance: {
+          bullish: "hsl(var(--stance-bullish))",
+          bearish: "hsl(var(--stance-bearish))",
+          active: "rgb(var(--stance-color-rgb))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

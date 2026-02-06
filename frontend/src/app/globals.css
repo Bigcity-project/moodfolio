@@ -54,6 +54,13 @@
     --glass-bg: rgba(255, 255, 255, 0.7);
     --glass-border: rgba(255, 255, 255, 0.3);
     --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+    /* Stance colors */
+    --stance-bullish: 174 72% 56%;
+    --stance-bearish: 25 95% 53%;
+    --stance-bullish-rgb: 45, 212, 191;
+    --stance-bearish-rgb: 251, 146, 60;
+    --stance-color-rgb: 147, 197, 253;
   }
 
   .dark {
@@ -238,4 +245,43 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Dashboard dark mode override */
+.dashboard-dark {
+  --background: 222 47% 6%;
+  --foreground: 0 0% 98%;
+  --card: 222 47% 8%;
+  --card-foreground: 0 0% 98%;
+  --border: 217 32% 15%;
+  --input: 217 32% 15%;
+  --glass-bg: rgba(15, 23, 42, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(180deg, hsl(222, 47%, 6%) 0%, hsl(222, 47%, 4%) 100%);
+  color: hsl(0, 0%, 98%);
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Snap scroll utilities */
+.snap-y {
+  scroll-snap-type: y mandatory;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+}
+
+.snap-always {
+  scroll-snap-stop: always;
+}
+
+/* Dashboard scrollbar - minimal */
+.dashboard-dark ::-webkit-scrollbar {
+  width: 4px;
+}
+
+.dashboard-dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
 }
