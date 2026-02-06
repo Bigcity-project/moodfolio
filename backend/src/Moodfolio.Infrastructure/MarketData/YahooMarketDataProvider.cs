@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using Microsoft.EntityFrameworkCore;
 using Moodfolio.Application.Common.Interfaces;
 using Moodfolio.Domain.Entities;
@@ -167,6 +168,90 @@ public class YahooMarketDataProvider : IMarketDataProvider
         catch
         {
             return null;
+        }
+    }
+
+    public async Task<StockSnapshot?> GetStockSnapshotAsync(string symbol, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var encodedSymbol = Uri.EscapeDataString(symbol.ToUpperInvariant());
+            var url = $"https://query1.finance.yahoo.com/v8/finance/chart/{encodedSymbol}?interval=1d&range=1d";
+
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0");
+            var json = await httpClient.GetStringAsync(url, cancellationToken);
+
+            using var doc = System.Text.Json.JsonDocument.Parse(json);
+            var results = doc.RootElement.GetProperty("chart").GetProperty("result");
+
+            if (results.GetArrayLength() == 0)
+            {
+                return null;
+            }
+
+            var meta = results[0].GetProperty("meta");
+
+            var currentPrice = meta.GetProperty("regularMarketPrice").GetDecimal();
+            var previousClose = meta.TryGetProperty("chartPreviousClose", out var prevEl) ? prevEl.GetDecimal() : currentPrice;
+            var change = currentPrice - previousClose;
+            var changePercent = previousClose != 0 ? (change / previousClose) * 100 : 0;
+
+            return new StockSnapshot
+            {
+                Symbol = symbol.ToUpperInvariant(),
+                Name = meta.TryGetProperty("longName", out var ln) ? ln.GetString() ?? symbol.ToUpperInvariant()
+                     : meta.TryGetProperty("shortName", out var sn) ? sn.GetString() ?? symbol.ToUpperInvariant()
+                     : symbol.ToUpperInvariant(),
+                Price = currentPrice,
+                Change = change,
+                ChangePercent = Math.Round(changePercent, 2),
+                Volume = meta.TryGetProperty("regularMarketVolume", out var vol) ? vol.GetInt64() : 0,
+                MarketCap = null,
+                TrailingPE = null,
+                FiftyTwoWeekHigh = meta.TryGetProperty("fiftyTwoWeekHigh", out var h52) ? h52.GetDecimal() : 0,
+                FiftyTwoWeekLow = meta.TryGetProperty("fiftyTwoWeekLow", out var l52) ? l52.GetDecimal() : 0,
+                DayHigh = meta.TryGetProperty("regularMarketDayHigh", out var dh) ? dh.GetDecimal() : 0,
+                DayLow = meta.TryGetProperty("regularMarketDayLow", out var dl) ? dl.GetDecimal() : 0,
+            };
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public async Task<IReadOnlyList<NewsArticle>> GetStockNewsAsync(string symbol, int maxArticles = 20, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var encodedSymbol = Uri.EscapeDataString(symbol.ToUpperInvariant());
+            var url = $"https://feeds.finance.yahoo.com/rss/2.0/headline?s={encodedSymbol}&region=US&lang=en-US";
+
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Moodfolio/1.0");
+            var rssContent = await httpClient.GetStringAsync(url, cancellationToken);
+
+            var doc = XDocument.Parse(rssContent);
+            var items = doc.Descendants("item")
+                .Take(maxArticles)
+                .Select(item => new NewsArticle
+                {
+                    Title = item.Element("title")?.Value ?? string.Empty,
+                    Url = item.Element("link")?.Value ?? string.Empty,
+                    PublishedAt = DateTimeOffset.TryParse(item.Element("pubDate")?.Value, out var date)
+                        ? date
+                        : DateTimeOffset.UtcNow,
+                    Description = item.Element("description")?.Value,
+                })
+                .Where(n => !string.IsNullOrEmpty(n.Title))
+                .ToList();
+
+            return items;
+        }
+        catch
+        {
+            return [];
         }
     }
 

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moodfolio.Application.Common.Interfaces;
+using Moodfolio.Infrastructure.Analysis;
 using Moodfolio.Infrastructure.Data;
 using Moodfolio.Infrastructure.MarketData;
 
@@ -14,6 +15,7 @@ public static class DependencyInjection
             options.UseSqlite(connectionString));
 
         services.AddScoped<IMarketDataProvider, YahooMarketDataProvider>();
+        services.AddScoped<IStockAnalyzer, ClaudeStockAnalyzer>();
 
         return services;
     }

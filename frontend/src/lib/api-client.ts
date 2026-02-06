@@ -1,12 +1,5 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-
-export interface TransactionDto {
-  date: string
-  symbol: string
-  action: 'BUY' | 'SELL'
-  quantity: number
-  price: number
-}
+// Use empty string to proxy through Next.js rewrites (avoids firewall issues)
+const API_BASE_URL = ''
 
 export interface MarketWeatherResponse {
   moodScore: number
@@ -20,30 +13,39 @@ export interface MarketWeatherResponse {
   timestamp: string
 }
 
-export interface DoNothingSimulationResponse {
-  actualReturnPct: number
-  doNothingReturnPct: number
-  performanceDrag: number
-  verdict: string
-  chartData: {
-    date: string
-    actualValue: number
-    doNothingValue: number
-  }[]
+export interface StockIndicatorsDto {
+  price: number
+  change: number
+  changePercent: number
+  volume: number
+  marketCap: number | null
+  trailingPE: number | null
+  fiftyTwoWeekHigh: number
+  fiftyTwoWeekLow: number
+  dayHigh: number
+  dayLow: number
 }
 
-export interface PersonaAnalysisResponse {
-  personaId: 'HODLER' | 'DAY_TRADER' | 'PANIC_SELLER' | 'SNIPER'
-  displayName: string
-  traits: string[]
-  description: string
-  advice: string
-  stats: {
-    avgHoldingDays: number
-    turnoverRate: number
-    panicSellRatio: number
-    winRate: number
-  }
+export interface NewsArticleDto {
+  title: string
+  url: string
+  publishedAt: string
+  description: string | null
+}
+
+export interface StockAnalysisDto {
+  summary: string
+  recommendation: 'BUY' | 'HOLD' | 'SELL'
+  reasoning: string
+}
+
+export interface StockAnalysisResponse {
+  symbol: string
+  name: string
+  indicators: StockIndicatorsDto
+  news: NewsArticleDto[]
+  analysis: StockAnalysisDto
+  timestamp: string
 }
 
 async function handleResponse<T>(response: Response): Promise<T> {
@@ -60,21 +62,9 @@ export const api = {
     return handleResponse(response)
   },
 
-  async runDoNothingSimulation(transactions: TransactionDto[]): Promise<DoNothingSimulationResponse> {
-    const response = await fetch(`${API_BASE_URL}/api/v1/simulation/do_nothing`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ transactions }),
-    })
-    return handleResponse(response)
-  },
-
-  async analyzePersona(transactions: TransactionDto[]): Promise<PersonaAnalysisResponse> {
-    const response = await fetch(`${API_BASE_URL}/api/v1/analysis/persona`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ transactions }),
-    })
+  async getStockAnalysis(symbol: string): Promise<StockAnalysisResponse> {
+    const encoded = encodeURIComponent(symbol.trim().toUpperCase())
+    const response = await fetch(`${API_BASE_URL}/api/v1/stock/${encoded}`)
     return handleResponse(response)
   },
 }

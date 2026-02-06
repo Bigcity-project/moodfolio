@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Cloud, BarChart3, User, ArrowRight, Sparkles } from 'lucide-react'
+import { Cloud, BarChart3, Brain, ArrowRight, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/theme-toggle'
@@ -16,14 +16,14 @@ const features = [
   },
   {
     icon: BarChart3,
-    title: 'Do-Nothing Simulator',
-    description: 'Compare your trading performance against a simple buy-and-hold SPY strategy.',
+    title: 'Stock Analysis',
+    description: 'Search any US stock ticker to get key indicators, 52-week ranges, and the latest Yahoo Finance news.',
     gradient: 'from-blue-400 to-cyan-500',
   },
   {
-    icon: User,
-    title: 'Portfolio Persona',
-    description: 'Discover your investor personality based on your trading patterns and behavior.',
+    icon: Brain,
+    title: 'AI Insights',
+    description: 'Get AI-powered analysis with buy/hold/sell recommendations and reasoning for any stock.',
     gradient: 'from-purple-400 to-pink-500',
   },
 ]
@@ -55,8 +55,8 @@ export default function Home() {
           </h1>
 
           <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto mb-8">
-            Understand market sentiment, analyze your trading behavior,
-            and make smarter investment decisions with AI-powered insights.
+            Understand market sentiment, analyze individual stocks,
+            and get AI-powered insights to make smarter investment decisions.
           </p>
 
           <Button asChild size="lg" className="group">
@@ -99,9 +99,9 @@ export default function Home() {
               Live Data
             </span>
             <span>•</span>
-            <span className="text-sm">VIX & RSI Indicators</span>
+            <span className="text-sm">Stock Analysis</span>
             <span>•</span>
-            <span className="text-sm">Portfolio Analysis</span>
+            <span className="text-sm">AI Insights</span>
           </div>
         </div>
       </main>

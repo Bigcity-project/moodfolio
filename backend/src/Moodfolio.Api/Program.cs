@@ -24,6 +24,8 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddValidatorsFromAssemblyContaining<TransactionDtoValidator>();
 builder.Services.AddFluentValidationAutoValidation();
 
+builder.Services.AddHttpClient();
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "Data Source=moodfolio.db";
 builder.Services.AddInfrastructure(connectionString);
